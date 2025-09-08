@@ -28,7 +28,7 @@ class WarnView(ui.View):
             except Exception:
                 pass
 
-    @ui.button(style=discord.ButtonStyle.gray, emoji="<:olympus_bin:1254336650075701308>")
+    @ui.button(style=discord.ButtonStyle.gray, emoji="🗑️")
     async def delete(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.message.delete()
 
@@ -170,8 +170,6 @@ class Warn(commands.Cog):
 
 
 """
-@Author: Sonu Jana
-    + Discord: me.sonu
-    + Community: https://discord.gg/odx (Olympus Development)
-    + for any queries reach out Community or DM me.
+@Author: Natrix
+ + helper goat
 """
