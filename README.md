@@ -2,12 +2,12 @@
  <br>
   <a href="https://github.com/sonujana26"><img src="https://cdn.discordapp.com/avatars/1144179659735572640/7af45040da87480e78a2424691753f4d.png?size=128"></a>
   <br>
-  Olympus the Ultimate Discord Bot
+  Kyra✨ the Ultimate Discord Bot
   <br>
 </h1>
 I've decided to make this repo public again!!
 
-<h3 align=center>An advanced multipurpose bot built with 400+ commands & 15 categories.</h3>
+<h3 align=center>An advanced multipurpose bot built with 200+ commands & 15 categories.</h3>
 
 <div align=center>
 
@@ -42,11 +42,10 @@ I've decided to make this repo public again!!
   <a href="#credits">Credits</a>
 </p>
 
-## 🔗 [Invite the Public Bot (Olympus) by clicking here!](https://discord.com/oauth2/authorize?client_id=1144179659735572640&permissions=2113268958&scope=bot)
 
 ## About
 
-Olympus is a powerful, easy-to-use Discord bot designed to enhance your server experience with an extensive suite of features. Built with advanced security, automoderation, moderation, music systems, welcoming features, and more at its core, Olympus ensures your community stays safe and well-managed, giving you peace of mind and control.
+Kyra✨ is a powerful, easy-to-use Discord bot designed to enhance your server experience with an extensive suite of features. Built with advanced security, automoderation, moderation, music systems, welcoming features, and more at its core, Olympus ensures your community stays safe and well-managed, giving you peace of mind and control.
 
 ## Features
 
@@ -63,19 +62,8 @@ Olympus is a powerful, easy-to-use Discord bot designed to enhance your server e
 | ![Customrole](https://img.shields.io/badge/Customrole-Role%20Management-red?style=for-the-badge) | Easily assign and manage custom roles. |
 | ![Fun](https://img.shields.io/badge/Fun-Entertainment%20Commands-red?style=for-the-badge) | Liven up your server with engaging fun commands. |
 | ![Voice](https://img.shields.io/badge/Voice-Channel%20Control-red?style=for-the-badge) | Manage voice channels with advanced utilities. |
-| ![AI Image Generator](https://img.shields.io/badge/AI%20Image%20Generator-Stunning%20Visuals-red?style=for-the-badge) | Create AI-powered images directly from Discord. |
+| ![AI Image Generator](https://img.shields.io/badge/AI%20Image%20Generator-Stunning%20Visuals-red?style=for-the-badge) | Create AI-powered images directly from 
 
-
-## Installation
-
-1. First, clone the repository:  
-   ```bash
-   git clone https://github.com/sonujana26/olympus-bot
-   ```
-2. After cloning, run the bot:
-   ```bash
-   python main.py
-   ```
 ## Setting Up
 
 1. Rename `example.env` to `.env` and replace the bot token value:
@@ -84,7 +72,7 @@ Olympus is a powerful, easy-to-use Discord bot designed to enhance your server e
    ```
    • Replace the Owner ID(s) [here](https://github.com/sonujana26/olympus-bot/blob/main/utils/config.py#L7) (in `utils/config.py`).
 2. **Prefix:**
-   Default Prefix: `$`
+   Default Prefix: `+`
    > You can change prefix **[here](https://github.com/sonujana26/olympus-bot/blob/main/utils/Tools.py#L84)**.
    
 4. **For Music:**  
@@ -103,25 +91,11 @@ Olympus is a powerful, easy-to-use Discord bot designed to enhance your server e
 7. **Emojis & Colors:**  
    Unfortunately, there is no centralized setup for emojis & embed colors. You need to manually update emojis in all files where they are used.
 
-## License
-This source code is protected under a custom Olympus License.
-
-> 🚫 No commercial use  
-> 🚫 No redistribution  
-> 🚫 No modification allowed without a paid license  
-
-To obtain a license or permission, [join our support server](https://discord.gg/odx).
 
 ## Donate
 Coming Soon
 
 ## Credits
 **Author:**  
-Sonu Jana - *Head Developer* - **[GitHub](https://github.com/sonujana26)**
+Natrix - *Head Developer* -
 
-**Team:**
-<div align="center">
-  <a href="https://discord.com/invite/odx">
-    <img src="https://discordapp.com/api/guilds/699587669059174461/widget.png?style=banner2">
-  </a>
-</div>
