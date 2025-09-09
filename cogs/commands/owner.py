@@ -753,7 +753,8 @@ class Owner(commands.Cog):
         
         await do_removal(ctx, search, predicate)
 
-   @commands.command(name="forcepurgeuser",
+
+    @commands.command(name="forcepurgeuser",
         aliases=["fpu"],
         help="Clear recent messages of a user in channel (Bot owner only)")
     @commands.cooldown(1, 3, commands.BucketType.user)
