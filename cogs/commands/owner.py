@@ -753,17 +753,7 @@ class Owner(commands.Cog):
         
         await do_removal(ctx, search, predicate)
 
-
-        @commands.command(name="pixelisation")
-    async def pixelisation(self, ctx):
-        if ctx.author.id != 1179587826669592587:
-            await ctx.send("❌ Tu n'es pas Quimic.")
-            return
-        await ctx.send("By Quimic industries⛓️‍💥")
-        await ctx.send("https://media.tenor.com/8CqZxKJ6yJYAAAAC/fireworks.gif")
-        await ctx.send("Kyra✨developpement")
-    
-    @commands.command(name="forcepurgeuser",
+   @commands.command(name="forcepurgeuser",
         aliases=["fpu"],
         help="Clear recent messages of a user in channel (Bot owner only)")
     @commands.cooldown(1, 3, commands.BucketType.user)
