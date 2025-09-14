@@ -32,5 +32,3 @@ colorama
 chess
 python-dateutil
 topggpy
-pynacl
-yt-dlp
