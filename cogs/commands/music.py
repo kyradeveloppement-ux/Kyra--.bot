@@ -336,7 +336,7 @@ class Music(commands.Cog):
                     pass
 
     async def connect_nodes(self) -> None:
-       nodes = [wavelink.Node(uri="https://lavalink.oops.wtf:443", password="www.freelavalink.ga")] 
+        nodes = [wavelink.Node(uri="https://lavalink.oops.wtf:443", password="www.freelavalink.ga", secure=True)]
         await wavelink.Pool.connect(nodes=nodes, client=self.client, cache_capacity=None)
 
 
