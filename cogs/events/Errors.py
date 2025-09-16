@@ -94,7 +94,7 @@ class Errors(Cog):
 
     if isinstance(error, commands.BotMissingPermissions):
       missing = ", ".join(error.missing_permissions)
-      await ctx.reply(f'<:Denied:1294218790082711553> I need **{missing}** Permission to run the **{ctx.command.qualified_name}** command!', delete_after=7)
+      await ctx.reply(f'❌ I need **{missing}** Permission to run the **{ctx.command.qualified_name}** command!', delete_after=7)
       return
 
     if isinstance(error, discord.HTTPException):
