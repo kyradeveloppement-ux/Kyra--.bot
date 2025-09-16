@@ -26,10 +26,10 @@ class AutoBlacklist(Cog):
                     ''', (guild_id, timestamp))
                     if channel:
                         embed = discord.Embed(
-                            title="<a:olympus_WarnFlash:1272569018183843874> Guild Blacklisted",
+                            title="⚠️ Guild Blacklisted",
                             description=(
                                 f"This guild has been blacklisted due to spamming or automation. "
-                                f"If you believe this is a mistake, please contact our [Support Server](https://discord.com/invite/odx) with any proof if possible."
+                                f"If you believe this is a mistake, please contact our [Support Server](https://discord.gg/X9NDdMf3xf) with any proof if possible."
                             ),
                             color=0x000000
                         )
@@ -84,10 +84,10 @@ class AutoBlacklist(Cog):
                 
                 await self.add_to_blacklist(guild_id=guild_id, channel=message.channel)
                 embed = discord.Embed(
-                    title="<a:olympus_WarnFlash:1272569018183843874> Guild Blacklisted",
+                    title="⚠️ Guild Blacklisted",
                     description=(
                         f"The guild has been blacklisted for excessive command usage. "
-                        f"If you believe this is a mistake, please contact our [Support Server](https://discord.com/invite/odx)."
+                        f"If you believe this is a mistake, please contact our [Support Server](https://discord.gg/X9NDdMf3xf)."
                     ),
                     color=0x000000
                 )
@@ -107,8 +107,8 @@ class AutoBlacklist(Cog):
                 if message.content in (f'<@{self.bot_user_id}>', f'<@!{self.bot_user_id}>'):
                     await self.add_to_blacklist(user_id=message.author.id)
                     embed = discord.Embed(
-                        title="<a:olympus_WarnFlash:1272569018183843874> User Blacklisted",
-                        description=f"**{message.author.mention} has been blacklisted for repeatedly mentioning me. If you believe this is a mistake, please contact our [Support Server](https://discord.com/invite/odx) with any proof if possible.**",
+                        title="⚠️ User Blacklisted",
+                        description=f"**{message.author.mention} has been blacklisted for repeatedly mentioning me. If you believe this is a mistake, please contact our [Support Server](https://discord.gg/X9NDdMf3xf) with any proof if possible.**",
                         color=0x000000
                     )
                     await message.channel.send(embed=embed)
@@ -139,8 +139,8 @@ class AutoBlacklist(Cog):
 
                 await self.add_to_blacklist(user_id=ctx.author.id)
                 embed = discord.Embed(
-                    title="<a:olympus_WarnFlash:1272569018183843874> User Blacklisted",
-                    description=f"**{ctx.author.mention} has been blacklisted for spamming commands. If you believe this is a mistake, please contact our [Support Server](https://discord.com/invite/odx) with any proof if possible.**",
+                    title="⚠️ User Blacklisted",
+                    description=f"**{ctx.author.mention} has been blacklisted for spamming commands. If you believe this is a mistake, please contact our [Support Server](https://discord.gg/X9NDdMf3xf) with any proof if possible.**",
                     color=0x000000
                 )
                 await ctx.reply(embed=embed)
