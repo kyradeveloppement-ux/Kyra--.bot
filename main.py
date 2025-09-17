@@ -49,7 +49,7 @@ async def on_ready():
 
     # Nettoyage des slash commands (à retirer après le 1er redémarrage)
     try:
-        await client.tree.clear_commands(guild=None)
+        client.tree.clear_commands(guild=None)  # SANS await !
         await client.tree.sync()
         print("Toutes les slash commands ont été supprimées.")
     except Exception as e:
