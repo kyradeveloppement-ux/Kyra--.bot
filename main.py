@@ -10,7 +10,6 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-
 from core import Context
 from core.Cog import Cog
 from core.Olympus import Olympus
@@ -20,26 +19,18 @@ from utils.config import *
 import jishaku
 import cogs 
 
-
-
-#Configuring Jishaku behavior
+# Configuring Jishaku behavior
 os.environ["JISHAKU_NO_DM_TRACEBACK"] = "False"
 os.environ["JISHAKU_HIDE"] = "True"
 os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
 os.environ["JISHAKU_FORCE_PAGINATOR"] = "True"
 
-
 client = Olympus()
-tree = client.tree
 TOKEN = os.getenv("TOKEN")
-
-
-
 
 @client.event
 async def on_ready():
     await client.wait_until_ready()
-    
     print("""
            \033[1;35m
 
@@ -55,13 +46,14 @@ async def on_ready():
     print(f"Logged in as: {client.user}")
     print(f"Connected to: {len(client.guilds)} guilds")
     print(f"Connected to: {len(client.users)} users")
-    try:
-        synced = await client.tree.sync()
-        all_commands = list(client.commands)
-        print(f"Synced Total {len(all_commands)} Client Commands and {len(synced)} Slash Commands")
-    except Exception as e:
-        print(e)
 
+    # Nettoyage des slash commands (à retirer après le 1er redémarrage)
+    try:
+        await client.tree.clear_commands(guild=None)
+        await client.tree.sync()
+        print("Toutes les slash commands ont été supprimées.")
+    except Exception as e:
+        print(f"Erreur lors de la suppression des slash commands : {e}")
 
 @client.event
 async def on_command_completion(context: commands.Context) -> None:
@@ -140,23 +132,18 @@ from threading import Thread
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def home():
     return f"© Kyra Development 2025"
 
-
 def run():
      app.run(host='0.0.0.0', port=3000)
-
 
 def keep_alive():
     server = Thread(target=run)
     server.start()
 
-
 keep_alive()
-
 
 async def main():
     async with client:
@@ -164,7 +151,6 @@ async def main():
         #await client.load_extension("cogs")
         await client.load_extension("jishaku")
         await client.start(TOKEN)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
