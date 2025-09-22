@@ -158,7 +158,7 @@ class Owner(commands.Cog):
         self.np_cache = []
         self.db_path = 'db/np.db'
         self.stop_tour = False
-        self.bot_owner_ids = [213347081799073793, 677952614390038559]
+        self.bot_owner_ids = [1341478551764860958, 1341478551764860958]
         self.client.loop.create_task(self.setup_database())
         self.client.loop.create_task(self.load_staff())
         
