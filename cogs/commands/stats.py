@@ -163,8 +163,8 @@ class Stats(commands.Cog):
                 ping_embed = Embed(title="Bot Statistic: Ping", color=0x000000)
                 ping_embed.add_field(name="🏓 Bot Latency", value=f"{round(sh.latency * 800)} ms", inline=False)
                 ping_embed.add_field(name="📦 Database Latency", value=f"{db_latency} ms", inline=False)
-                ping_embed.add_field(name="<:database:1292512419016347762> Websocket Latency", value=f"{wsping} ms", inline=False)
-                ping_embed.set_footer(text="Powered by Olympus Development™", icon_url=self.bot.user.display_avatar.url)
+                ping_embed.add_field(name="📦 Websocket Latency", value=f"{wsping} ms", inline=False)
+                ping_embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
                 await interaction.response.edit_message(embed=ping_embed, view=view)
         ping_button.callback = ping_button_callback
         view.add_item(ping_button)
@@ -174,14 +174,14 @@ class Stats(commands.Cog):
         """team_button = Button(label="Team", style=ButtonStyle.primary)
         async def team_button_callback(interaction):
             if interaction.user == ctx.author:
-                team_embed = Embed(title="Olympus Team", color=0x000000)
-                team_embed.add_field(name="**<:olympus_owner:1228227536207740989> Bot Owner(s)**", value=">>> **[Sonu](https://discord.com/users/1070619070468214824)**,   **[!⌁𓆩ζ͜͡𝘿𝙉𝘼 𝙎𝙚𝙧𝙞𝙚𝙨ㄚㄒᥫ᭡](https://discord.com/users/677952614390038559)**,   **[Pritam](https://discord.com/users/1087282349395411015)**,   **[CuTeBoY.Ly](https://discord.com/users/995898882607292506)**", inline=False)
-                team_embed.add_field(name="**<:olympus_developer:1250290657256538196> Bot Developer(s)**", value="> **[Sonu!?](https://discord.com/users/213347081799073793)** (Lead Developer)", inline=False)
-                team_embed.add_field(name="**<:olympus_general:1222789674687397930> Web Developer(s)**", value="> **[Love](https://discord.com/users/773755998665441280)** (Lead Web Developer)", inline=False)
-                team_embed.add_field(name="**<:olympus_utility:1222787342474154094> Tester(s)**", value="> **[! Lucifer](https://discord.com/users/1113040686686674987)**", inline=False)
-                team_embed.add_field(name="**<:olympus_team:1243399230651895809> Team(s)**", value="> **[Olympus Development™](https://discord.gg/odx)**", inline=False)
-                team_embed.add_field(name="**<:olympus_partner:1228228301089144976> Partner(s)**", value="> **[Endercloud](https://endercloud.in/)**", inline=False)
-                team_embed.set_footer(text="Powered by Olympus Development™", icon_url=self.bot.user.display_avatar.url)
+                team_embed = Embed(title="Kyra Team", color=0x000000)
+                team_embed.add_field(name="**👑 Bot Owner(s)**", value=">>> **[Natrix](https://discord.com/users/1341478551764860958)**,   **[!Quimic](https://discord.com/users/1179587826669592587)**,   **[Juloxx](https://discord.com/users/1204961543528382467)**,   **[ inline=False)
+                team_embed.add_field(name="**🤖 Bot Developer(s)**", value="> **[Natrix!](https://discord.com/users/1341478551764860958)** (Lead Developer)", inline=False)
+                team_embed.add_field(name="**🪫 Web Developer(s)**", value="> **[Natrix](https://discord.com/users/1341478551764860958)** (Lead Web Developer)", inline=False)
+                team_embed.add_field(name="**🥲 Tester(s)**", value="> **[Natrix !](https://discord.com/users/1341478551764860958)**", inline=False)
+                team_embed.add_field(name="**🎿 Team(s)**", value="> **[Kyra Development™](https://discord.gg/PzekXKbbmm)**", inline=False)
+                team_embed.add_field(name="**😄 Partner(s)**", value="> **[Endercloud](https://endercloud.in/)**", inline=False)
+                team_embed.set_footer(text="Powered by Kyra Development™", icon_url=self.bot.user.display_avatar.url)
                 await interaction.response.edit_message(embed=team_embed, view=view)
         team_button.callback = team_button_callback
         view.add_item(team_button)"""
