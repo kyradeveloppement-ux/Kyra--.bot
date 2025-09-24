@@ -157,7 +157,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def vcunmute(self, ctx, *, member: discord.Member):
         if member.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 f"{str(member)} is not connected to any voice channel.",
@@ -313,7 +313,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _undeafen(self, ctx, *, member: discord.Member):
         if member.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 f"{str(member)} is not connected to any of the voice channel",
@@ -323,7 +323,7 @@ class Voice(commands.Cog):
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
             return await ctx.reply(embed=embed)
         if member.voice.deaf == False:
-            embed2 = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed2 = discord.Embed(title="🚨 Error",
 
                 description=
                 f"{str(member)} is already undeafened in the voice channel",
@@ -333,7 +333,7 @@ class Voice(commands.Cog):
             embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
             return await ctx.reply(embed=embed2)
         ch = member.voice.channel.mention
-        embed3 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed3 = discord.Embed(title="✅ Success",
 
             description=f"{str(member)} has been undeafened in {ch}",
             color=self.color)
@@ -355,7 +355,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _deafenall(self, ctx):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any of the voice channel",
@@ -373,7 +373,7 @@ class Voice(commands.Cog):
                     reason=
                     f"voice deafenall Command Executed by {str(ctx.author)}")
                 count += 1
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
                                description=f"Deafened {count} members in {ch}",
                                color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
@@ -392,7 +392,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _undeafall(self, ctx):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected in any of the voice channel",
@@ -410,7 +410,7 @@ class Voice(commands.Cog):
                     reason=
                     f"Voice undeafenall Command Executed by: {str(ctx.author)}")
                 count += 1
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
 
             description=f"Undeafened {count} members in {ch}",
             color=self.color)
@@ -430,7 +430,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _moveall(self, ctx, *, channel: discord.VoiceChannel):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any of the voice channel",
@@ -449,7 +449,7 @@ class Voice(commands.Cog):
                     reason=
                     f"voice moveall Command Executed by: {str(ctx.author)}")
                 count += 1
-            embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+            embed2 = discord.Embed(title="✅ Success",
 
                 description=f"{count} Members moved from {ch} to {nch}",
                 color=self.color)
@@ -458,7 +458,7 @@ class Voice(commands.Cog):
             embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
             await ctx.reply(embed=embed2)
         except:
-            embed3 = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed3 = discord.Embed(title="🚨 Error",
 
                 description=f"Invalid Voice channel provided",
                 color=self.color)
@@ -480,7 +480,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _pullall(self, ctx, *, channel: discord.VoiceChannel):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any of the voice channel",
@@ -520,7 +520,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _move(self, ctx, member: discord.Member, channel: discord.VoiceChannel):
         if member.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 f"{str(member)} is not connected to any voice channel.",
@@ -530,7 +530,7 @@ class Voice(commands.Cog):
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
             return await ctx.reply(embed=embed)
         if channel == member.voice.channel:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 f"{str(member)} is already in {channel.mention}.",
@@ -541,7 +541,7 @@ class Voice(commands.Cog):
             return await ctx.reply(embed=embed)
         await member.edit(voice_channel=channel,
                           reason=f"Moved by {str(ctx.author)}")
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
 
             description=f"{str(member)} has been moved to {channel.mention}",
             color=self.color)
@@ -562,7 +562,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _pull(self, ctx, member: discord.Member):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any voice channel.",
@@ -572,7 +572,7 @@ class Voice(commands.Cog):
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
             return await ctx.reply(embed=embed)
         if member.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 f"{str(member)} is not connected to any voice channel.",
@@ -582,7 +582,7 @@ class Voice(commands.Cog):
             embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
             return await ctx.reply(embed=embed)
         if member.voice.channel == ctx.author.voice.channel:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 f"{str(member)} is already in your voice channel.",
@@ -593,7 +593,7 @@ class Voice(commands.Cog):
             return await ctx.reply(embed=embed)
         await member.edit(voice_channel=ctx.author.voice.channel,
                           reason=f"Pulled by {str(ctx.author)}")
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
 
             description=f"{str(member)} has been pulled to your voice channel.",
             color=self.color)
@@ -613,7 +613,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _lock(self, ctx):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any voice channel.",
@@ -626,7 +626,7 @@ class Voice(commands.Cog):
         await ctx.author.voice.channel.set_permissions(ctx.guild.default_role,
                                                        connect=False,
                                                        reason=f"Locked by {str(ctx.author)}")
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
 
             description=f"{ch} has been locked.",
             color=self.color)
@@ -646,7 +646,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _unlock(self, ctx):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any voice channel.",
@@ -659,7 +659,7 @@ class Voice(commands.Cog):
         await ctx.author.voice.channel.set_permissions(ctx.guild.default_role,
                                                        connect=True,
                                                        reason=f"Unlocked by {str(ctx.author)}")
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
 
             description=f"{ch} has been unlocked.",
             color=self.color)
@@ -679,7 +679,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _private(self, ctx):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any voice channel.",
@@ -693,7 +693,7 @@ class Voice(commands.Cog):
                                                        connect=False,
                                                        view_channel=False,
                                                        reason=f"Made private by {str(ctx.author)}")
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
 
             description=f"{ch} has been made private.",
             color=self.color)
@@ -713,7 +713,7 @@ class Voice(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     async def _unprivate(self, ctx):
         if ctx.author.voice is None:
-            embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+            embed = discord.Embed(title="🚨 Error",
 
                 description=
                 "You are not connected to any voice channel.",
@@ -727,7 +727,7 @@ class Voice(commands.Cog):
                                                        connect=True,
                                                        view_channel=True,
                                                        reason=f"Made public by {str(ctx.author)}")
-        embed2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+        embed2 = discord.Embed(title="✅ Success",
 
             description=f"{ch} has been made public.",
             color=self.color)
