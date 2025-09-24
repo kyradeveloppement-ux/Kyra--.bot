@@ -73,7 +73,7 @@ class Stats(commands.Cog):
     @ignore_check()
     @commands.cooldown(1, 7, commands.BucketType.user)
     async def stats(self, ctx):
-        processing_message = await ctx.send("<a:loading:1272527164256030873> Loading Olympus information...")
+        processing_message = await ctx.send("⚙️ Loading Kyra✨ information...")
         
         guild_count = len(self.bot.guilds)
         user_count = sum(g.member_count for g in self.bot.guilds if g.member_count is not None)
@@ -100,20 +100,20 @@ class Stats(commands.Cog):
         playing_tracks = sum(1 for vc in self.bot.voice_clients if vc.playing)
 
         embed = Embed(title="Olympus Statistics: General", color=0x000000)
-        embed.add_field(name="<:channel:1204242537804734544> Channels", value=f"Total: **{channel_count}**\nText: **{text_channel_count}**   |   Voice: **{voice_channel_count}**   |   Category: **{category_channel_count}**", inline=False)
-        embed.add_field(name="<:uptime:1292499357660086343> Uptime", value=f"{uptime}", inline=False)
-        embed.add_field(name="<a:users:1292506970019987578> User Count", value=f"Humans: **{human_count}**   |   Bots: **{bot_count}**", inline=False)
-        embed.add_field(name="<:Folders:1302319651476340748> Commands", value=f"Total: **{commands_count}**   |   Slash: **{slash_commands}**", inline=False)
-        embed.add_field(name="<:python:1219641847262085210> Libraries Used", value=f"Discord Library: **[discord.py](https://discordpy.readthedocs.io/en/stable/)**\nTotal Libraries: **{total_libraries}**", inline=False)
-        embed.add_field(name="<:code:1292498725930930279> Codebase Stats", value=f"Total Python Files: **{total_files}**\nTotal Lines: **{total_lines}**\nTotal Words: **{total_words}**", inline=False)
+        embed.add_field(name="⛓️ Channels", value=f"Total: **{channel_count}**\nText: **{text_channel_count}**   |   Voice: **{voice_channel_count}**   |   Category: **{category_channel_count}**", inline=False)
+        embed.add_field(name="🟢 Uptime", value=f"{uptime}", inline=False)
+        embed.add_field(name="💃 User Count", value=f"Humans: **{human_count}**   |   Bots: **{bot_count}**", inline=False)
+        embed.add_field(name="🤖Commands", value=f"Total: **{commands_count}**   |   Slash: **{slash_commands}**", inline=False)
+        embed.add_field(name="🐍 Libraries Used", value=f"Discord Library: **[discord.py](https://discordpy.readthedocs.io/en/stable/)**\nTotal Libraries: **{total_libraries}**", inline=False)
+        embed.add_field(name=" Codebase Stats", value=f"Total Python Files: **{total_files}**\nTotal Lines: **{total_lines}**\nTotal Words: **{total_words}**", inline=False)
         embed.add_field(
-    name="<:gvMusic:1213831433219481722> Music Stats",
+    name="🎧 Music Stats",
     value=f"Currently Connected: **[{channels_connected}](https://discord.gg/odx)**\n"
           f"Currently Playing: **[{playing_tracks}](https://discord.gg/odx)**\n"
           f"Total Songs Played: **[{self.total_songs_played}](https://discord.gg/odx)**",
     inline=False
         )
-        embed.set_footer(text="Powered by Olympus Development™", icon_url=self.bot.user.display_avatar.url)
+        embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
 
         view = View()
         
@@ -128,13 +128,13 @@ class Stats(commands.Cog):
         system_button = Button(label="System", style=ButtonStyle.gray)
         async def system_button_callback(interaction):
             if interaction.user == ctx.author:
-                system_embed = Embed(title="Olympus Statistics: System", color=0x000000)
+                system_embed = Embed(title="Kyra Statistics: System", color=0x000000)
 
-                system_embed.add_field(name="<:system:1292507895379918891> System Info", value=f"• Discord.py: **{discord.__version__}**\n• Python: **{platform.python_version()}**\n• Architecture: **{platform.machine()}**\n• Platform: **{platform.system()}**", inline=False)
+                system_embed.add_field(name="🧶 System Info", value=f"• Discord.py: **{discord.__version__}**\n• Python: **{platform.python_version()}**\n• Architecture: **{platform.machine()}**\n• Platform: **{platform.system()}**", inline=False)
 
-                system_embed.add_field(name="<:memory_:1292508839132008533> Memory Info", value=f"• Total Memory: **{memory_info.total / (1024 ** 2):,.2f} MB**\n• Memory Left: **{memory_info.available / (1024 ** 2):,.2f} MB**\n• Heap Total: **{memory_info.used / (1024 ** 2):,.2f} MB**", inline=False)
-                system_embed.add_field(name="<:cpu:1292508956882767975> CPU Info", value=f"• CPU: **{psutil.cpu_freq().max}' GHz**\n• CPU Usage: **{psutil.cpu_percent()}%**\n• CPU Cores: **{psutil.cpu_count(logical=False)}**\n• CPU Speed: **{cpu_info.current:.2f} MHz**", inline=False)
-                system_embed.set_footer(text="Powered by Olympus Development™", icon_url=self.bot.user.display_avatar.url)
+                system_embed.add_field(name="🎴 Memory Info", value=f"• Total Memory: **{memory_info.total / (1024 ** 2):,.2f} MB**\n• Memory Left: **{memory_info.available / (1024 ** 2):,.2f} MB**\n• Heap Total: **{memory_info.used / (1024 ** 2):,.2f} MB**", inline=False)
+                system_embed.add_field(name=" CPU Info", value=f"• CPU: **{psutil.cpu_freq().max}' GHz**\n• CPU Usage: **{psutil.cpu_percent()}%**\n• CPU Cores: **{psutil.cpu_count(logical=False)}**\n• CPU Speed: **{cpu_info.current:.2f} MHz**", inline=False)
+                system_embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
                 
                 await interaction.response.edit_message(embed=system_embed, view=view)
         system_button.callback = system_button_callback
@@ -161,8 +161,8 @@ class Stats(commands.Cog):
                 wsping = round(self.bot.latency * 1000, 2)
 
                 ping_embed = Embed(title="Bot Statistic: Ping", color=0x000000)
-                ping_embed.add_field(name="<:pong:1218740734463840348> Bot Latency", value=f"{round(sh.latency * 800)} ms", inline=False)
-                ping_embed.add_field(name="<:websocket:1292512590379094139> Database Latency", value=f"{db_latency} ms", inline=False)
+                ping_embed.add_field(name="🏓 Bot Latency", value=f"{round(sh.latency * 800)} ms", inline=False)
+                ping_embed.add_field(name="📦 Database Latency", value=f"{db_latency} ms", inline=False)
                 ping_embed.add_field(name="<:database:1292512419016347762> Websocket Latency", value=f"{wsping} ms", inline=False)
                 ping_embed.set_footer(text="Powered by Olympus Development™", icon_url=self.bot.user.display_avatar.url)
                 await interaction.response.edit_message(embed=ping_embed, view=view)
