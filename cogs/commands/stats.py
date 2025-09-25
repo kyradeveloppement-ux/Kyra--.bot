@@ -1,6 +1,5 @@
 import discord
 import psutil
-import sys
 import os
 import time
 import aiosqlite
@@ -61,7 +60,7 @@ class Stats(commands.Cog):
             pass
         return total_lines, total_words
 
-    def gather_file_stats(self, directory):
+    def gather_file_stats(self, directory="./cogs"):  # ✅ Limité au dossier des cogs
         total_files = 0
         total_lines = 0
         total_words = 0
@@ -106,12 +105,11 @@ class Stats(commands.Cog):
             f"{uptime_timedelta.seconds % 60} seconds"
         )
 
-        total_files, total_lines, total_words = self.gather_file_stats(".")
+        total_files, total_lines, total_words = self.gather_file_stats()
 
         cpu_info = psutil.cpu_freq()
         memory_info = psutil.virtual_memory()
 
-        # ✅ Remplacement de pkg_resources par importlib.metadata
         total_libraries = len(importlib.metadata.distributions())
         channels_connected = sum(1 for vc in self.bot.voice_clients if vc)
         playing_tracks = sum(1 for vc in self.bot.voice_clients if getattr(vc, "playing", False))
@@ -192,6 +190,11 @@ class Stats(commands.Cog):
                 s_id = ctx.guild.shard_id
                 sh = self.bot.get_shard(s_id)
 
+                if sh is not None:
+                    bot_latency = round(sh.latency * 1000, 2)
+                else:
+                    bot_latency = round(self.bot.latency * 1000, 2)
+
                 db_latency = None
                 try:
                     async with aiosqlite.connect("db/afk.db") as db:
@@ -205,7 +208,7 @@ class Stats(commands.Cog):
                 wsping = round(self.bot.latency * 1000, 2)
 
                 ping_embed = Embed(title="Bot Statistic: Ping", color=0x000000)
-                ping_embed.add_field(name="🏓 Bot Latency", value=f"{round(sh.latency * 800)} ms", inline=False)
+                ping_embed.add_field(name="🏓 Bot Latency", value=f"{bot_latency} ms", inline=False)
                 ping_embed.add_field(name="📦 Database Latency", value=f"{db_latency} ms", inline=False)
                 ping_embed.add_field(name="📦 Websocket Latency", value=f"{wsping} ms", inline=False)
                 ping_embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
