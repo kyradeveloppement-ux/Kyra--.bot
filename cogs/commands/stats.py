@@ -1,10 +1,11 @@
 import discord
 import psutil
+import sys
 import os
 import time
 import aiosqlite
 import platform
-import pkg_resources
+import importlib.metadata
 import datetime
 from discord import Embed, ButtonStyle
 from discord.ui import Button, View
@@ -18,12 +19,17 @@ class Stats(commands.Cog):
         self.bot = bot
         self.start_time = time.time()
         self.total_songs_played = 0
+
+        # Vérifie que le dossier db existe
+        os.makedirs("db", exist_ok=True)
+
         self.bot.loop.create_task(self.setup_database())
 
     async def setup_database(self):
         async with aiosqlite.connect("db/stats.db") as db:
             await db.execute("CREATE TABLE IF NOT EXISTS stats (key TEXT PRIMARY KEY, value INTEGER)")
             await db.commit()
+
             async with db.execute("SELECT value FROM stats WHERE key = 'total_songs_played'") as cursor:
                 row = await cursor.fetchone()
                 self.total_songs_played = row[0] if row else 0
@@ -32,7 +38,7 @@ class Stats(commands.Cog):
         async with aiosqlite.connect("db/stats.db") as db:
             await db.execute(
                 "INSERT OR REPLACE INTO stats (key, value) VALUES ('total_songs_played', ?)",
-                (self.total_songs_played,)
+                (self.total_songs_played,),
             )
             await db.commit()
 
@@ -45,10 +51,10 @@ class Stats(commands.Cog):
         total_lines = 0
         total_words = 0
         try:
-            with open(file_path, 'r', encoding='utf-8') as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 for line in file:
                     stripped_line = line.strip()
-                    if stripped_line:
+                    if stripped_line and not stripped_line.startswith(("〇")):
                         total_lines += 1
                         total_words += len(stripped_line.split())
         except (UnicodeDecodeError, IOError):
@@ -62,7 +68,7 @@ class Stats(commands.Cog):
         for root, _, files in os.walk(directory):
             for file in files:
                 file_path = os.path.join(root, file)
-                if file.endswith('.py') and '.local' not in root:
+                if file.endswith(".py") and ".local" not in root:
                     total_files += 1
                     file_lines, file_words = self.count_code_stats(file_path)
                     total_lines += file_lines
@@ -72,7 +78,7 @@ class Stats(commands.Cog):
     @commands.hybrid_command(
         name="stats",
         aliases=["botinfo", "botstats", "bi", "statistics"],
-        help="Shows the bot's information."
+        help="Shows the bot's information.",
     )
     @blacklist_check()
     @ignore_check()
@@ -93,34 +99,54 @@ class Stats(commands.Cog):
         commands_count = len(set(self.bot.walk_commands()))
         uptime_seconds = int(round(time.time() - self.start_time))
         uptime_timedelta = datetime.timedelta(seconds=uptime_seconds)
-        uptime = f"{uptime_timedelta.days}d {uptime_timedelta.seconds // 3600}h {(uptime_timedelta.seconds // 60) % 60}m {uptime_timedelta.seconds % 60}s"
+        uptime = (
+            f"{uptime_timedelta.days} days, "
+            f"{uptime_timedelta.seconds // 3600} hours, "
+            f"{(uptime_timedelta.seconds // 60) % 60} minutes, "
+            f"{uptime_timedelta.seconds % 60} seconds"
+        )
 
-        total_files, total_lines, total_words = self.gather_file_stats('.')
+        total_files, total_lines, total_words = self.gather_file_stats(".")
 
         cpu_info = psutil.cpu_freq()
         memory_info = psutil.virtual_memory()
 
-        total_libraries = sum(1 for _ in pkg_resources.working_set)
+        # ✅ Remplacement de pkg_resources par importlib.metadata
+        total_libraries = len(importlib.metadata.distributions())
         channels_connected = sum(1 for vc in self.bot.voice_clients if vc)
         playing_tracks = sum(1 for vc in self.bot.voice_clients if getattr(vc, "playing", False))
 
         embed = Embed(title="Kyra Statistics: General", color=0x000000)
-        embed.add_field(name="⛓️ Channels", value=f"Total: **{channel_count}**\nText: **{text_channel_count}** | Voice: **{voice_channel_count}** | Category: **{category_channel_count}**", inline=False)
+        embed.add_field(
+            name="⛓️ Channels",
+            value=f"Total: **{channel_count}**\nText: **{text_channel_count}**   |   Voice: **{voice_channel_count}**   |   Category: **{category_channel_count}**",
+            inline=False,
+        )
         embed.add_field(name="🟢 Uptime", value=f"{uptime}", inline=False)
-        embed.add_field(name="💃 User Count", value=f"Humans: **{human_count}** | Bots: **{bot_count}**", inline=False)
-        embed.add_field(name="🤖 Commands", value=f"Total: **{commands_count}** | Slash: **{slash_commands}**", inline=False)
-        embed.add_field(name="🐍 Libraries Used", value=f"Discord Library: **[discord.py](https://discordpy.readthedocs.io/en/stable/)**\nTotal Libraries: **{total_libraries}**", inline=False)
-        embed.add_field(name="📜 Codebase Stats", value=f"Python Files: **{total_files}**\nLines: **{total_lines}**\nWords: **{total_words}**", inline=False)
+        embed.add_field(name="💃 User Count", value=f"Humans: **{human_count}**   |   Bots: **{bot_count}**", inline=False)
+        embed.add_field(name="🤖 Commands", value=f"Total: **{commands_count}**   |   Slash: **{slash_commands}**", inline=False)
+        embed.add_field(
+            name="🐍 Libraries Used",
+            value=f"Discord Library: **[discord.py](https://discordpy.readthedocs.io/en/stable/)**\nTotal Libraries: **{total_libraries}**",
+            inline=False,
+        )
+        embed.add_field(
+            name=" Codebase Stats",
+            value=f"Total Python Files: **{total_files}**\nTotal Lines: **{total_lines}**\nTotal Words: **{total_words}**",
+            inline=False,
+        )
         embed.add_field(
             name="🎧 Music Stats",
-            value=f"Connected: **{channels_connected}**\nPlaying: **{playing_tracks}**\nTotal Songs Played: **{self.total_songs_played}**",
-            inline=False
+            value=f"Currently Connected: **[{channels_connected}](https://discord.gg/odx)**\n"
+            f"Currently Playing: **[{playing_tracks}](https://discord.gg/odx)**\n"
+            f"Total Songs Played: **[{self.total_songs_played}](https://discord.gg/odx)**",
+            inline=False,
         )
         embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
 
         view = View()
 
-        # Buttons
+        # --- Boutons
         general_button = Button(label="General", style=ButtonStyle.gray)
         async def general_button_callback(interaction):
             if interaction.user == ctx.author:
@@ -132,9 +158,29 @@ class Stats(commands.Cog):
         async def system_button_callback(interaction):
             if interaction.user == ctx.author:
                 system_embed = Embed(title="Kyra Statistics: System", color=0x000000)
-                system_embed.add_field(name="🧶 System Info", value=f"• Discord.py: **{discord.__version__}**\n• Python: **{platform.python_version()}**\n• Arch: **{platform.machine()}**\n• Platform: **{platform.system()}**", inline=False)
-                system_embed.add_field(name="🎴 Memory Info", value=f"• Total: **{memory_info.total / (1024 ** 2):,.2f} MB**\n• Free: **{memory_info.available / (1024 ** 2):,.2f} MB**\n• Used: **{memory_info.used / (1024 ** 2):,.2f} MB**", inline=False)
-                system_embed.add_field(name="⚡ CPU Info", value=f"• Max: **{cpu_info.max} GHz**\n• Usage: **{psutil.cpu_percent()}%**\n• Cores: **{psutil.cpu_count(logical=False)}**\n• Speed: **{cpu_info.current:.2f} MHz**", inline=False)
+                system_embed.add_field(
+                    name="🧶 System Info",
+                    value=f"• Discord.py: **{discord.__version__}**\n"
+                          f"• Python: **{platform.python_version()}**\n"
+                          f"• Architecture: **{platform.machine()}**\n"
+                          f"• Platform: **{platform.system()}**",
+                    inline=False,
+                )
+                system_embed.add_field(
+                    name="🎴 Memory Info",
+                    value=f"• Total Memory: **{memory_info.total / (1024 ** 2):,.2f} MB**\n"
+                          f"• Memory Left: **{memory_info.available / (1024 ** 2):,.2f} MB**\n"
+                          f"• Heap Total: **{memory_info.used / (1024 ** 2):,.2f} MB**",
+                    inline=False,
+                )
+                system_embed.add_field(
+                    name=" CPU Info",
+                    value=f"• CPU: **{psutil.cpu_freq().max}' GHz**\n"
+                          f"• CPU Usage: **{psutil.cpu_percent()}%**\n"
+                          f"• CPU Cores: **{psutil.cpu_count(logical=False)}**\n"
+                          f"• CPU Speed: **{cpu_info.current:.2f} MHz**",
+                    inline=False,
+                )
                 system_embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
                 await interaction.response.edit_message(embed=system_embed, view=view)
         system_button.callback = system_button_callback
@@ -159,9 +205,9 @@ class Stats(commands.Cog):
                 wsping = round(self.bot.latency * 1000, 2)
 
                 ping_embed = Embed(title="Bot Statistic: Ping", color=0x000000)
-                ping_embed.add_field(name="🏓 Bot Latency", value=f"{round(sh.latency * 1000)} ms", inline=False)
+                ping_embed.add_field(name="🏓 Bot Latency", value=f"{round(sh.latency * 800)} ms", inline=False)
                 ping_embed.add_field(name="📦 Database Latency", value=f"{db_latency} ms", inline=False)
-                ping_embed.add_field(name="🌐 Websocket Latency", value=f"{wsping} ms", inline=False)
+                ping_embed.add_field(name="📦 Websocket Latency", value=f"{wsping} ms", inline=False)
                 ping_embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
                 await interaction.response.edit_message(embed=ping_embed, view=view)
         ping_button.callback = ping_button_callback
@@ -171,12 +217,38 @@ class Stats(commands.Cog):
         async def team_button_callback(interaction):
             if interaction.user == ctx.author:
                 team_embed = Embed(title="Kyra Team", color=0x000000)
-                team_embed.add_field(name="**👑 Bot Owner(s)**", value=">>> [Natrix](https://discord.com/users/1341478551764860958), [!Quimic](https://discord.com/users/1179587826669592587), [Juloxx](https://discord.com/users/1204961543528382467)", inline=False)
-                team_embed.add_field(name="**🤖 Bot Developer(s)**", value="> [Natrix!](https://discord.com/users/1341478551764860958) (Lead Developer)", inline=False)
-                team_embed.add_field(name="**🪫 Web Developer(s)**", value="> [Natrix](https://discord.com/users/1341478551764860958) (Lead Web Developer)", inline=False)
-                team_embed.add_field(name="**🥲 Tester(s)**", value="> [Natrix !](https://discord.com/users/1341478551764860958)", inline=False)
-                team_embed.add_field(name="**🎿 Team(s)**", value="> [Kyra Development™](https://discord.gg/PzekXKbbmm)", inline=False)
-                team_embed.add_field(name="**😄 Partner(s)**", value="> [Endercloud](https://endercloud.in/)", inline=False)
+                team_embed.add_field(
+                    name="**👑 Bot Owner(s)**",
+                    value=">>> **[Natrix](https://discord.com/users/1341478551764860958)**, "
+                          "**[!Quimic](https://discord.com/users/1179587826669592587)**, "
+                          "**[Juloxx](https://discord.com/users/1204961543528382467)**",
+                    inline=False,
+                )
+                team_embed.add_field(
+                    name="**🤖 Bot Developer(s)**",
+                    value="> **[Natrix!](https://discord.com/users/1341478551764860958)** (Lead Developer)",
+                    inline=False,
+                )
+                team_embed.add_field(
+                    name="**🪫 Web Developer(s)**",
+                    value="> **[Natrix](https://discord.com/users/1341478551764860958)** (Lead Web Developer)",
+                    inline=False,
+                )
+                team_embed.add_field(
+                    name="**🥲 Tester(s)**",
+                    value="> **[Natrix !](https://discord.com/users/1341478551764860958)**",
+                    inline=False,
+                )
+                team_embed.add_field(
+                    name="**🎿 Team(s)**",
+                    value="> **[Kyra Development™](https://discord.gg/PzekXKbbmm)**",
+                    inline=False,
+                )
+                team_embed.add_field(
+                    name="**😄 Partner(s)**",
+                    value="> **[Endercloud](https://endercloud.in/)**",
+                    inline=False,
+                )
                 team_embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
                 await interaction.response.edit_message(embed=team_embed, view=view)
         team_button.callback = team_button_callback
@@ -189,7 +261,7 @@ class Stats(commands.Cog):
         delete_button.callback = delete_button_callback
         view.add_item(delete_button)
 
-        server_count_button = Button(label=f"Servers: {guild_count} | Users: {blahh}", style=ButtonStyle.success, disabled=True)
+        server_count_button = Button(label=f"Servers: {guild_count}    |    Users: {blahh}", style=ButtonStyle.success, disabled=True)
         view.add_item(server_count_button)
 
         await ctx.reply(embed=embed, view=view)
