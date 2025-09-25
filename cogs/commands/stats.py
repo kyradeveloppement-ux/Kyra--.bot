@@ -99,7 +99,7 @@ class Stats(commands.Cog):
         channels_connected = sum(1 for vc in self.bot.voice_clients if vc)
         playing_tracks = sum(1 for vc in self.bot.voice_clients if vc.playing)
 
-        embed = Embed(title="Olympus Statistics: General", color=0x000000)
+        embed = Embed(title="Kyra Statistics: General", color=0x000000)
         embed.add_field(name="⛓️ Channels", value=f"Total: **{channel_count}**\nText: **{text_channel_count}**   |   Voice: **{voice_channel_count}**   |   Category: **{category_channel_count}**", inline=False)
         embed.add_field(name="🟢 Uptime", value=f"{uptime}", inline=False)
         embed.add_field(name="💃 User Count", value=f"Humans: **{human_count}**   |   Bots: **{bot_count}**", inline=False)
@@ -171,7 +171,7 @@ class Stats(commands.Cog):
 
         
 
-        """team_button = Button(label="Team", style=ButtonStyle.primary)
+        team_button = Button(label="Team", style=ButtonStyle.primary)
         async def team_button_callback(interaction):
             if interaction.user == ctx.author:
                 team_embed = Embed(title="Kyra Team", color=0x000000)
