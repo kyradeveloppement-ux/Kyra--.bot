@@ -6,7 +6,7 @@ from colorama import Fore, Style, init
 #----------Commands---------#
 from .commands.help import Help
 from .commands.general import General
-from .commands.music import Music
+# from .commands.music import Music   # ⛔ Music désactivé
 from .commands.automod import Automod
 from .commands.welcome import Welcomer
 from .commands.fun import Fun
@@ -47,9 +47,9 @@ from .commands.status import Status
 from .commands.np import NoPrefix
 from .commands.filters import FilterCog
 from .commands.owner2 import Global
-#from .commands.activity import Activity
-#____________ Events _____________
+# from .commands.activity import Activity
 
+#____________ Events _____________
 from .events.autoblacklist import AutoBlacklist
 from .events.Errors import Errors
 from .events.on_guild import Guild
@@ -59,7 +59,7 @@ from .events.greet2 import greet
 from .events.mention import Mention
 from .events.react import React
 from .events.autoreact import AutoReactListener
-#from .events.topgg import TopGG
+# from .events.topgg import TopGG
 
 ########-------HELP-------########
 from .olympus.antinuke import _antinuke
@@ -67,7 +67,7 @@ from .olympus.extra import _extra
 from .olympus.general import _general
 from .olympus.automod import _automod 
 from .olympus.moderation import _moderation
-from .olympus.music import _music
+# from .olympus.music import _music   # ⛔ Music désactivé
 from .olympus.fun import _fun
 from .olympus.games import _games
 from .olympus.ignore import _ignore
@@ -78,7 +78,6 @@ from .olympus.giveaway import _giveaway
 
 
 #########ANTINUKE#########
-
 from .antinuke.anti_member_update import AntiMemberUpdate
 from .antinuke.antiban import AntiBan
 from .antinuke.antibotadd import AntiBotAdd
@@ -97,14 +96,6 @@ from .antinuke.antiwebhook import AntiWebhookUpdate
 from .antinuke.antiwebhookcr import AntiWebhookCreate
 from .antinuke.antiwebhookdl import AntiWebhookDelete
 
-#Extra Optional Events 
-
-#from .antinuke.antiemocr import AntiEmojiCreate
-#from .antinuke.antiemodl import AntiEmojiDelete
-#from .antinuke.antiemoup import AntiEmojiUpdate
-#from .antinuke.antisticker import AntiSticker
-#from .antinuke.antiunban import AntiUnban
-
 ############ AUTOMOD ############
 from .automod.antispam import AntiSpam
 from .automod.anticaps import AntiCaps
@@ -112,7 +103,6 @@ from .automod.antilink import AntiLink
 from .automod.anti_invites import AntiInvite
 from .automod.anti_mass_mention import AntiMassMention
 from .automod.anti_emoji_spam import AntiEmojiSpam
-
 
 from .moderation.ban import Ban
 from .moderation.unban import Unban
@@ -143,13 +133,15 @@ async def setup(bot: Olympus):
         AntiChannelCreate, AntiChannelDelete, AntiChannelUpdate, AntiEveryone, AntiGuildUpdate,
         AntiIntegration, AntiKick, AntiPrune, AntiRoleCreate, AntiRoleDelete,
         AntiRoleUpdate, AntiWebhookUpdate, AntiWebhookCreate,
-        AntiWebhookDelete, AntiSpam, AntiCaps, AntiLink, AntiInvite, AntiMassMention, Music, Stats, Emergency, Status, NoPrefix, FilterCog, AutoReaction, AutoReactListener, Ban, Unban, Mute, Unmute, Lock, Unlock, Hide, Unhide, Kick, Warn, Role, Message, Moderation, TopCheck, Snipe, Global
+        AntiWebhookDelete, AntiSpam, AntiCaps, AntiLink, AntiInvite, AntiMassMention, 
+        Stats, Emergency, Status, NoPrefix, FilterCog, AutoReaction, AutoReactListener, 
+        Ban, Unban, Mute, Unmute, Lock, Unlock, Hide, Unhide, Kick, Warn, Role, 
+        Message, Moderation, TopCheck, Snipe, Global
     ]
-
 
   await bot.add_cog(Help(bot))
   await bot.add_cog(General(bot))
-  await bot.add_cog(Music(bot))
+  # await bot.add_cog(Music(bot))   # ⛔ Music désactivé
   await bot.add_cog(Automod(bot))
   await bot.add_cog(Welcomer(bot))
   await bot.add_cog(Fun(bot))
@@ -185,16 +177,14 @@ async def setup(bot: Olympus):
   await bot.add_cog(FilterCog(bot))
   await bot.add_cog(Global(bot))
   await bot.add_cog(Map(bot))
-  #await bot.add_cog(Activity(bot))
-
-
+  # await bot.add_cog(Activity(bot))
 
   await bot.add_cog(_antinuke(bot))
   await bot.add_cog(_extra(bot))
   await bot.add_cog(_general(bot))
   await bot.add_cog(_automod(bot))  
   await bot.add_cog(_moderation(bot))
-  await bot.add_cog(_music(bot))
+  # await bot.add_cog(_music(bot))   # ⛔ Music désactivé
   await bot.add_cog(_fun(bot))
   await bot.add_cog(_games(bot))
   await bot.add_cog(_ignore(bot))
@@ -202,12 +192,7 @@ async def setup(bot: Olympus):
   await bot.add_cog(_voice(bot))   
   await bot.add_cog(_welcome(bot))
   await bot.add_cog(_giveaway(bot))
-  
 
-
-
-
-  
   await bot.add_cog(AutoBlacklist(bot))
   await bot.add_cog(Guild(bot))
   await bot.add_cog(Errors(bot))
@@ -221,7 +206,6 @@ async def setup(bot: Olympus):
   await bot.add_cog(AutoReaction(bot))
   await bot.add_cog(AutoReactListener(bot))
   await bot.add_cog(NotifCommands(bot))
-
 
   await bot.add_cog(AntiMemberUpdate(bot))
   await bot.add_cog(AntiBan(bot))
@@ -241,15 +225,12 @@ async def setup(bot: Olympus):
   await bot.add_cog(AntiWebhookCreate(bot))
   await bot.add_cog(AntiWebhookDelete(bot))
 
-
-#Extra Optional Events 
-
-  #await bot.add_cog(AntiEmojiCreate(bot))
-  #await bot.add_cog(AntiEmojiDelete(bot))
-  #await bot.add_cog(AntiEmojiUpdate(bot))
-  #await bot.add_cog(AntiSticker(bot))
-  #await bot.add_cog(AntiUnban(bot))
-
+  # Extra Optional Events 
+  # await bot.add_cog(AntiEmojiCreate(bot))
+  # await bot.add_cog(AntiEmojiDelete(bot))
+  # await bot.add_cog(AntiEmojiUpdate(bot))
+  # await bot.add_cog(AntiSticker(bot))
+  # await bot.add_cog(AntiUnban(bot))
 
   await bot.add_cog(AntiSpam(bot))
   await bot.add_cog(AntiCaps(bot))
@@ -257,11 +238,6 @@ async def setup(bot: Olympus):
   await bot.add_cog(AntiLink(bot))
   await bot.add_cog(AntiMassMention(bot))
   await bot.add_cog(AntiEmojiSpam(bot))
-
-
-
-
-
 
   await bot.add_cog(Ban(bot))
   await bot.add_cog(Unban(bot))
