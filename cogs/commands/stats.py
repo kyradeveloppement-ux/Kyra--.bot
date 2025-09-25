@@ -175,7 +175,7 @@ class Stats(commands.Cog):
         async def team_button_callback(interaction):
             if interaction.user == ctx.author:
                 team_embed = Embed(title="Kyra Team", color=0x000000)
-                team_embed.add_field(name="**👑 Bot Owner(s)**", value=">>> **[Natrix](https://discord.com/users/1341478551764860958)**,   **[!Quimic](https://discord.com/users/1179587826669592587)**,   **[Juloxx](https://discord.com/users/1204961543528382467)**,   **[ inline=False)
+                team_embed.add_field(name="**👑 Bot Owner(s)**", value=">>> **[Natrix](https://discord.com/users/1341478551764860958)**,   **[!Quimic](https://discord.com/users/1179587826669592587)**,   **[Juloxx](https://discord.com/users/1204961543528382467)**, " [ inline=False)
                 team_embed.add_field(name="**🤖 Bot Developer(s)**", value="> **[Natrix!](https://discord.com/users/1341478551764860958)** (Lead Developer)", inline=False)
                 team_embed.add_field(name="**🪫 Web Developer(s)**", value="> **[Natrix](https://discord.com/users/1341478551764860958)** (Lead Web Developer)", inline=False)
                 team_embed.add_field(name="**🥲 Tester(s)**", value="> **[Natrix !](https://discord.com/users/1341478551764860958)**", inline=False)
