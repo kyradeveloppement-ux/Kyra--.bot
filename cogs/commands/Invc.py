@@ -38,13 +38,13 @@ class Invcrole(commands.Cog):
             async with db.execute('SELECT role_id FROM vcroles WHERE guild_id = ?', (ctx.guild.id,)) as cursor:
                 row = await cursor.fetchone()
                 if row:
-                    embed = discord.Embed(title="<:olympus_notify:1227866804630720565> Access Denied",
+                    embed = discord.Embed(title="😌 Access Denied",
                                           description=f"VC role is already set in this guild with the role {ctx.guild.get_role(row[0]).mention}.\nPlease **remove** it to add another one.", color=0x000000)
                     await ctx.reply(embed=embed)
                     return
             await db.execute('INSERT INTO vcroles (guild_id, role_id) VALUES (?, ?)', (ctx.guild.id, role.id))
             await db.commit()
-            embed = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+            embed = discord.Embed(title="✅ Success",
                                   description=f"VC role {role.mention} added for this guild.", color=0x000000)
             await ctx.reply(embed=embed)
 
@@ -57,13 +57,13 @@ class Invcrole(commands.Cog):
             async with db.execute('SELECT role_id FROM vcroles WHERE guild_id = ? AND role_id = ?', (ctx.guild.id, role.id)) as cursor:
                 row = await cursor.fetchone()
                 if not row:
-                    embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+                    embed = discord.Embed(title="🥲 Error",
                                           description="Given role is not set in VC role.", color=0x000000)
                     await ctx.send(embed=embed)
                     return
             await db.execute('DELETE FROM vcroles WHERE guild_id = ? AND role_id = ?', (ctx.guild.id, role.id))
             await db.commit()
-            embed = discord.Embed(title="<:olympus_tick:1227866641027698792> Success",
+            embed = discord.Embed(title="✅ Success",
                                   description=f"VC role {role.mention} removed for this guild.", color=0x000000)
             await ctx.send(embed=embed)
 
@@ -76,7 +76,7 @@ class Invcrole(commands.Cog):
             async with db.execute('SELECT role_id FROM vcroles WHERE guild_id = ?', (ctx.guild.id,)) as cursor:
                 row = await cursor.fetchone()
                 if not row:
-                    embed = discord.Embed(title="<:olympus_cross:1227866668152393789> Error",
+                    embed = discord.Embed(title="🥲 Error",
                                           description="VC role is not set in this guild.", color=0x000000)
                     await ctx.send(embed=embed)
                     return
@@ -97,9 +97,9 @@ class Invcrole(commands.Cog):
                     role = member.guild.get_role(row[0])
 
                     if after.channel and role not in member.roles:
-                        await self.add_role_with_retry(member, role, reason="Member Joined VC | Olympus Invcrole")
+                        await self.add_role_with_retry(member, role, reason="Member Joined VC | Kyra Invcrole")
                     elif not after.channel and role in member.roles:
-                        await self.remove_role_with_retry(member, role, reason="Member Left VC | Olympus Invcrole")
+                        await self.remove_role_with_retry(member, role, reason="Member Left VC | Kyra Invcrole")
         except discord.Forbidden:
             print(f"Bot lacks permissions to maange role in a guild during Invc Event .")
         except Exception as e:
@@ -132,11 +132,3 @@ class Invcrole(commands.Cog):
                 print(f"Error removing role: {e}")
                 break
             attempt += 1
-
-
-"""
-@Author: Sonu Jana
-    + Discord: me.sonu
-    + Community: https://discord.gg/odx (Olympus Development)
-    + for any queries reach out Community or DM me.
-"""
