@@ -6,19 +6,16 @@ import aiosqlite
 import platform
 import importlib.metadata
 import datetime
-import traceback
 from discord import Embed, ButtonStyle
 from discord.ui import Button, View
 from discord.ext import commands
 from utils.Tools import *
-import wavelink
 
 
 class Stats(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.start_time = time.time()
-        self.total_songs_played = 0
 
         os.makedirs("db", exist_ok=True)
         self.bot.loop.create_task(self.setup_database())
@@ -27,46 +24,22 @@ class Stats(commands.Cog):
         async with aiosqlite.connect("db/stats.db") as db:
             await db.execute("CREATE TABLE IF NOT EXISTS stats (key TEXT PRIMARY KEY, value INTEGER)")
             await db.commit()
-            async with db.execute("SELECT value FROM stats WHERE key = 'total_songs_played'") as cursor:
-                row = await cursor.fetchone()
-                self.total_songs_played = row[0] if row else 0
-
-    async def update_total_songs_played(self):
-        async with aiosqlite.connect("db/stats.db") as db:
-            await db.execute(
-                "INSERT OR REPLACE INTO stats (key, value) VALUES ('total_songs_played', ?)",
-                (self.total_songs_played,),
-            )
-            await db.commit()
-
-    @commands.Cog.listener()
-    async def on_wavelink_track_start(self, payload: wavelink.TrackStartEventPayload):
-        self.total_songs_played += 1
-        await self.update_total_songs_played()
 
     @commands.hybrid_command(
         name="stats",
         aliases=["botinfo", "botstats", "bi", "statistics"],
         help="Shows the bot's information.",
     )
-    # @blacklist_check()
-    # @ignore_check()
     @commands.cooldown(1, 7, commands.BucketType.user)
     async def stats(self, ctx):
-        processing_message = None
-        try:
-            processing_message = await ctx.send("⚙️ Loading Kyra✨ information...")
+        processing_message = await ctx.send("⚙️ Loading Kyra✨ information...")
 
+        try:
             # --- Guilds et Users
             guild_count = len(self.bot.guilds)
             user_count = sum(g.member_count for g in self.bot.guilds if g.member_count is not None)
             bot_count = sum(sum(1 for m in g.members if m.bot) for g in self.bot.guilds)
             human_count = user_count - bot_count
-            text_channel_count = len([c for c in self.bot.get_all_channels() if isinstance(c, discord.TextChannel)])
-            voice_channel_count = len([c for c in self.bot.get_all_channels() if isinstance(c, discord.VoiceChannel)])
-            category_channel_count = len([c for c in self.bot.get_all_channels() if isinstance(c, discord.CategoryChannel)])
-            slash_commands = len([cmd for cmd in self.bot.tree.get_commands()])
-            commands_count = len(set(self.bot.walk_commands()))
 
             # --- Uptime
             uptime_seconds = int(round(time.time() - self.start_time))
@@ -78,71 +51,32 @@ class Stats(commands.Cog):
                 f"{uptime_timedelta.seconds % 60} seconds"
             )
 
-            # --- File stats (si tu veux les réactiver à l'avenir, fais attention au scan '.' qui peut être long)
-            # total_files, total_lines, total_words = self.gather_file_stats(".")
-
-            # --- CPU / Memory safe
-            try:
-                cpu_info = psutil.cpu_freq()
-            except Exception:
-                cpu_info = None
-            try:
-                memory_info = psutil.virtual_memory()
-            except Exception:
-                memory_info = None
-
-            # --- Libraries count (fix: distributions() est un itérable)
-            try:
-                total_libraries = sum(1 for _ in importlib.metadata.distributions())
-            except Exception:
-                total_libraries = "N/A"
-
-            # --- Music stats
-            try:
-                channels_connected = sum(1 for vc in self.bot.voice_clients if vc)
-            except Exception:
-                channels_connected = 0
-            try:
-                playing_tracks = sum(1 for vc in self.bot.voice_clients if getattr(vc, "playing", False))
-            except Exception:
-                playing_tracks = 0
+            # --- Stats système
+            cpu_info = psutil.cpu_freq() or psutil._common.scpufreq(0, 0, 0)
+            memory_info = psutil.virtual_memory()
+            total_libraries = sum(1 for _ in importlib.metadata.distributions())
 
             # --- Embed principal
             embed = Embed(title="Kyra Statistics: General", color=0x000000)
             embed.add_field(
-                name="⛓️ Channels",
-                value=f"Total: **{len(set(self.bot.get_all_channels()))}**\nText: **{text_channel_count}**   |   Voice: **{voice_channel_count}**   |   Category: **{category_channel_count}**",
+                name="💃 Users",
+                value=f"Humans: **{human_count}** | Bots: **{bot_count}**",
                 inline=False,
             )
             embed.add_field(name="🟢 Uptime", value=f"{uptime}", inline=False)
-            embed.add_field(name="💃 User Count", value=f"Humans: **{human_count}**   |   Bots: **{bot_count}**", inline=False)
-            embed.add_field(name="🤖 Commands", value=f"Total: **{commands_count}**   |   Slash: **{slash_commands}**", inline=False)
+            embed.add_field(name="📊 Guilds", value=f"{guild_count}", inline=False)
             embed.add_field(
                 name="🐍 Libraries Used",
-                value=f"Discord Library: **[discord.py](https://discordpy.readthedocs.io/en/stable/)**\nTotal Libraries: **{total_libraries}**",
-                inline=False,
-            )
-            # si tu veux afficher codebase stats, réactive et fais attention au temps de scan
-            # embed.add_field(name=" Codebase Stats", value=f"Total Python Files: **{total_files}**\nTotal Lines: **{total_lines}**\nTotal Words: **{total_words}**", inline=False)
-
-            embed.add_field(
-                name="🎧 Music Stats",
-                value=f"Currently Connected: **{channels_connected}**\n"
-                      f"Currently Playing: **{playing_tracks}**\n"
-                      f"Total Songs Played: **{self.total_songs_played}**",
+                value=f"Discord.py: **{discord.__version__}**\nTotal Libraries: **{total_libraries}**",
                 inline=False,
             )
 
-            # footer safe
-            try:
-                icon_url = self.bot.user.display_avatar.url
-            except Exception:
-                icon_url = None
-            embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=icon_url)
+            embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
 
-            # --- View / Buttons (identique à ton code)
+            # --- Boutons
             view = View()
 
+            # Bouton General
             general_button = Button(label="General", style=ButtonStyle.gray)
             async def general_button_callback(interaction):
                 if interaction.user == ctx.author:
@@ -150,34 +84,86 @@ class Stats(commands.Cog):
             general_button.callback = general_button_callback
             view.add_item(general_button)
 
+            # Bouton System
             system_button = Button(label="System", style=ButtonStyle.gray)
             async def system_button_callback(interaction):
                 if interaction.user == ctx.author:
                     system_embed = Embed(title="Kyra Statistics: System", color=0x000000)
-                    system_embed.add_field(name="🧶 System Info", value=f"• Discord.py: **{discord.__version__}**\n• Python: **{platform.python_version()}**\n• Architecture: **{platform.machine()}**\n• Platform: **{platform.system()}**", inline=False)
-                    if memory_info:
-                        system_embed.add_field(name="🎴 Memory Info", value=f"• Total Memory: **{memory_info.total / (1024 ** 2):,.2f} MB**\n• Memory Left: **{memory_info.available / (1024 ** 2):,.2f} MB**\n• Heap Total: **{memory_info.used / (1024 ** 2):,.2f} MB**", inline=False)
-                    if cpu_info:
-                        system_embed.add_field(name=" CPU Info", value=f"• CPU: **{cpu_info.max if hasattr(cpu_info, 'max') else 'N/A'}' GHz**\n• CPU Usage: **{psutil.cpu_percent()}%**\n• CPU Cores: **{psutil.cpu_count(logical=False)}**\n• CPU Speed: **{cpu_info.current:.2f} MHz**", inline=False)
+                    system_embed.add_field(
+                        name="🧶 System Info",
+                        value=f"Python: {platform.python_version()} | OS: {platform.system()} {platform.release()}",
+                        inline=False,
+                    )
+                    system_embed.add_field(
+                        name="🎴 Memory Info",
+                        value=f"Total: {memory_info.total / (1024 ** 2):,.2f} MB | Used: {memory_info.used / (1024 ** 2):,.2f} MB",
+                        inline=False,
+                    )
+                    system_embed.add_field(
+                        name="🖥️ CPU Info",
+                        value=f"Cores: {psutil.cpu_count(logical=False)} | Usage: {psutil.cpu_percent()}%",
+                        inline=False,
+                    )
                     await interaction.response.edit_message(embed=system_embed, view=view)
             system_button.callback = system_button_callback
             view.add_item(system_button)
 
+            # Bouton Team
             team_button = Button(label="Team", style=ButtonStyle.primary)
             async def team_button_callback(interaction):
                 if interaction.user == ctx.author:
                     team_embed = Embed(title="Kyra Team", color=0x000000)
-                    team_embed.add_field(name="**👑 Bot Owner(s)**", value=">>> **[Natrix](https://discord.com/users/1341478551764860958)**, **[!Quimic](https://discord.com/users/1179587826669592587)**, **[Juloxx](https://discord.com/users/1204961543528382467)**", inline=False)
-                    team_embed.add_field(name="**🤖 Bot Developer(s)**", value="> **[Natrix!](https://discord.com/users/1341478551764860958)** (Lead Developer)", inline=False)
-                    team_embed.add_field(name="**🪫 Web Developer(s)**", value="> **[Natrix](https://discord.com/users/1341478551764860958)** (Lead Web Developer)", inline=False)
-                    team_embed.add_field(name="**🥲 Tester(s)**", value="> **[Natrix !](https://discord.com/users/1341478551764860958)**", inline=False)
-                    team_embed.add_field(name="**🎿 Team(s)**", value="> **[Kyra Development™](https://discord.gg/PzekXKbbmm)**", inline=False)
-                    team_embed.add_field(name="**😄 Partner(s)**", value="> **[Endercloud](https://endercloud.in/)**", inline=False)
-                    team_embed.set_footer(text="Powered by Kyra Development™", icon_url=icon_url)
+                    team_embed.add_field(
+                        name="👑 Bot Owners",
+                        value=">>> [Natrix](https://discord.com/users/1341478551764860958), "
+                              "[!Quimic](https://discord.com/users/1179587826669592587), "
+                              "[Juloxx](https://discord.com/users/1204961543528382467)",
+                        inline=False,
+                    )
+                    team_embed.add_field(
+                        name="🤖 Developers",
+                        value="[Natrix!](https://discord.com/users/1341478551764860958) (Lead Developer)",
+                        inline=False,
+                    )
+                    team_embed.add_field(
+                        name="🎿 Team",
+                        value="[Kyra Development™](https://discord.gg/PzekXKbbmm)",
+                        inline=False,
+                    )
                     await interaction.response.edit_message(embed=team_embed, view=view)
             team_button.callback = team_button_callback
             view.add_item(team_button)
 
+            # Bouton Ping
+            ping_button = Button(label="Ping", style=ButtonStyle.green)
+            async def ping_button_callback(interaction):
+                if interaction.user == ctx.author:
+                    s_id = ctx.guild.shard_id if ctx.guild else 0
+                    sh = self.bot.get_shard(s_id)
+                    latency = round(sh.latency * 800) if sh else round(self.bot.latency * 1000, 2)
+
+                    db_latency = None
+                    try:
+                        async with aiosqlite.connect("db/afk.db") as db:
+                            start_time = time.perf_counter()
+                            await db.execute("SELECT 1")
+                            end_time = time.perf_counter()
+                            db_latency = round((end_time - start_time) * 1000, 2)
+                    except Exception:
+                        db_latency = "N/A"
+
+                    wsping = round(self.bot.latency * 1000, 2)
+
+                    ping_embed = Embed(title="Bot Statistic: Ping", color=0x000000)
+                    ping_embed.add_field(name="🏓 Bot Latency", value=f"{latency} ms", inline=False)
+                    ping_embed.add_field(name="📦 Database Latency", value=f"{db_latency} ms", inline=False)
+                    ping_embed.add_field(name="📦 Websocket Latency", value=f"{wsping} ms", inline=False)
+                    ping_embed.set_footer(text="Powered by Kyra✨ Development™", icon_url=self.bot.user.display_avatar.url)
+                    await interaction.response.edit_message(embed=ping_embed, view=view)
+            ping_button.callback = ping_button_callback
+            view.add_item(ping_button)
+
+            # Bouton delete
             delete_button = Button(label="🗑️", style=ButtonStyle.red)
             async def delete_button_callback(interaction):
                 if interaction.user == ctx.author:
@@ -185,26 +171,16 @@ class Stats(commands.Cog):
             delete_button.callback = delete_button_callback
             view.add_item(delete_button)
 
-            server_count_button = Button(label=f"Servers: {guild_count}    |    Users: {human_count + bot_count}", style=ButtonStyle.success, disabled=True)
+            # Bouton info serveurs/users
+            server_count_button = Button(label=f"Servers: {guild_count} | Users: {user_count}", style=ButtonStyle.success, disabled=True)
             view.add_item(server_count_button)
 
-            # Envoi final
             await ctx.send(embed=embed, view=view)
 
         except Exception as e:
-            # affiche une erreur courte dans le salon ET log la stack en console pour debug
-            try:
-                await ctx.send(f"❌ Erreur dans la commande stats : `{e}`")
-            except Exception:
-                pass
-            traceback.print_exc()
-        finally:
-            # supprime toujours le message de chargement s'il existe
-            try:
-                if processing_message:
-                    await processing_message.delete()
-            except Exception:
-                pass
+            await ctx.send(f"❌ Erreur capturée: `{e}`")
+
+        await processing_message.delete()
 
 
 async def setup(bot):
