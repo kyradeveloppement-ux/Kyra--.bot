@@ -82,11 +82,3 @@ class Slots(commands.Cog):
             os.remove(fp)
         except Exception as e:
             print(e)
-
-
-"""
-@Author: Sonu Jana
-    + Discord: me.sonu
-    + Community: https://discord.gg/odx (Olympus Development)
-    + for any queries reach out Community or DM me.
-"""
