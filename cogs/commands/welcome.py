@@ -931,11 +931,3 @@ class Welcomer(commands.Cog):
             view.add_item(cancel_button)
             
             await ctx.send(embed=embed, view=view)
-
-
-"""
-@Author: Sonu Jana
-    + Discord: me.sonu
-    + Community: https://discord.gg/odx (Olympus Development)
-    + for any queries reach out Community or DM me.
-"""
