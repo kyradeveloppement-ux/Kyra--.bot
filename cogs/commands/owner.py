@@ -124,7 +124,7 @@ async def do_removal(ctx, limit, predicate, *, before=None, after=None):
 
   spammers = Counter(m.author.display_name for m in deleted)
   deleted = len(deleted)
-  messages = [f'<:olympus_tick:1227866641027698792> | {deleted} message{" was" if deleted == 1 else "s were"} removed.']
+  messages = [f'🧑‍💻 | {deleted} message{" was" if deleted == 1 else "s were"} removed.']
   if deleted:
       messages.append("")
       spammers = sorted(spammers.items(), key=lambda t: t[1], reverse=True)
@@ -133,7 +133,7 @@ async def do_removal(ctx, limit, predicate, *, before=None, after=None):
   to_send = "\n".join(messages)
 
   if len(to_send) > 2000:
-      await ctx.send(f"<:olympus_tick:1227866641027698792> | Successfully removed {deleted} messages.", delete_after=3)
+      await ctx.send(f"🧑‍💻 | Successfully removed {deleted} messages.", delete_after=3)
   else:
       await ctx.send(to_send, delete_after=3)
 
@@ -191,21 +191,21 @@ class Owner(commands.Cog):
             async with aiosqlite.connect(self.db_path) as db:
                 await db.execute('INSERT OR IGNORE INTO staff (id) VALUES (?)', (user.id,))
                 await db.commit()
-            sonu2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success", description=f"Added {user} to the staff list.", color=0x000000)
+            sonu2 = discord.Embed(title="✅ Success", description=f"Added {user} to the staff list.", color=0x000000)
             await ctx.reply(embed=sonu2, mention_author=False)
 
     @commands.command(name="staff_remove", aliases=["staffremove", "removestaff"], help="Removes a user from the staff list.")
     @commands.is_owner()
     async def staff_remove(self, ctx, user: discord.User):
         if user.id not in self.staff:
-            sonu = discord.Embed(title="<:olympus_notify:1227866804630720565> Access Denied", description=f"{user} is not in the staff list.", color=0x000000)
+            sonu = discord.Embed(title="❌ Access Denied", description=f"{user} is not in the staff list.", color=0x000000)
             await ctx.reply(embed=sonu, mention_author=False)
         else:
             self.staff.remove(user.id)
             async with aiosqlite.connect(self.db_path) as db:
                 await db.execute('DELETE FROM staff WHERE id = ?', (user.id,))
                 await db.commit()
-                sonu2 = discord.Embed(title="<:olympus_tick:1227866641027698792> Success", description=f"Removed {user} from the staff list.", color=0x000000)
+                sonu2 = discord.Embed(title="✅ Success", description=f"Removed {user} from the staff list.", color=0x000000)
             await ctx.reply(embed=sonu2, mention_author=False)
 
     @commands.command(name="staff_list", aliases=["stafflist", "liststaff", "staffs"], help="Lists all staff members.")
@@ -219,10 +219,10 @@ class Owner(commands.Cog):
                 member = await self.client.fetch_user(staff_id)
                 member_list.append(f"{member.name}#{member.discriminator} (ID: {staff_id})")
             staff_display = "\n".join(member_list)
-            sonu = discord.Embed(title="<:olympus_staff:1228227884481515613> Olympus Staffs", description=f"\n{staff_display}", color=0x000000)
+            sonu = discord.Embed(title="m🐍 Kyra✨ Staffs", description=f"\n{staff_display}", color=0x000000)
             await ctx.send(embed=sonu)
 
-    @commands.command(name="slist")
+    @commands.command(name="servlist")
     @commands.check(is_owner_or_staff)
     async def _slist(self, ctx):
         sonuop = sorted(self.client.guilds, key=lambda g: g.member_count, reverse=True)
@@ -233,7 +233,7 @@ class Owner(commands.Cog):
         embeds = DescriptionEmbedPaginator(
             entries=entries,
             description="",
-            title=f"Guild List of Olympus [{len(self.client.guilds)}]",
+            title=f"Guild List of Kyra [{len(self.client.guilds)}]",
             color=0x000000,
             per_page=10).get_pages()
         paginator = Paginator(ctx, embeds)
@@ -353,10 +353,10 @@ class Owner(commands.Cog):
         else:
             await ctx.send("Invalid channel ID or bot has no access to the channel.")
             
-    @commands.command(name="olympus.restart", help="Restarts the client.")
+    @commands.command(name="kyra.restart", help="Restarts the client.")
     @commands.is_owner()
     async def _restart(self, ctx: Context):
-        await ctx.reply("Restarting Olympus...")
+        await ctx.reply("Restarting Kyra...")
         restart_program()
 
     @commands.command(name="sync", help="Syncs all database.")
@@ -382,7 +382,7 @@ class Owner(commands.Cog):
                     json.dump(data, f, indent=4)
 
 
-    @commands.command(name="owners")
+    @commands.command(name="found")
     @commands.is_owner()
     async def own_list(self, ctx):
         nplist = OWNER_IDS
@@ -394,7 +394,7 @@ class Owner(commands.Cog):
         ]
         embeds = DescriptionEmbedPaginator(
             entries=entries,
-            title=f"Olympus Owners [{len(nplist)}]",
+            title=f"Kyra Owners [{len(nplist)}]",
             description="",
             per_page=10,
             color=0x000000).get_pages()
@@ -411,7 +411,7 @@ class Owner(commands.Cog):
         """ DM the user of your choice """
         try:
             await user.send(message)
-            await ctx.send(f"<:olympus_tick:1227866641027698792> | Successfully Sent a DM to **{user}**")
+            await ctx.send(f"✅ | Successfully Sent a DM to **{user}**")
         except discord.Forbidden:
             await ctx.send("This user might be having DMs blocked or it's a bot account...")           
 
@@ -431,9 +431,9 @@ class Owner(commands.Cog):
         try:
             await ctx.guild.me.edit(nick=name)
             if name:
-                await ctx.send(f"<:olympus_tick:1227866641027698792> | Successfully changed nickname to **{name}**")
+                await ctx.send(f"✅ | Successfully changed nickname to **{name}**")
             else:
-                await ctx.send("<:olympus_tick:1227866641027698792> | Successfully removed nickname")
+                await ctx.send("✅ | Successfully removed nickname")
         except Exception as err:
             await ctx.send(err) 
 
@@ -448,14 +448,14 @@ class Owner(commands.Cog):
                 await member.ban(reason=reason)
                 embed = discord.Embed(
                     title="Successfully Banned",
-                    description=f"<:olympus_tick:1227866641027698792> | **{member.name}** has been successfully banned from {ctx.guild.name} by the Bot Owner.",
+                    description=f"✅ | **{member.name}** has been successfully banned from {ctx.guild.name} by the Bot Owner.",
                     color=0x000000)
                 await ctx.reply(embed=embed, mention_author=False, delete_after=3)
                 await ctx.message.delete()
             except discord.Forbidden:
                 embed = discord.Embed(
                     title="Error!",
-                    description=f"<:olympus_notify:1227866804630720565> I do not have permission to ban **{member.name}** in this guild.",
+                    description=f"😌 I do not have permission to ban **{member.name}** in this guild.",
                     color=0x000000
                 )
                 await ctx.reply(embed=embed, mention_author=False, delete_after=5)
@@ -463,7 +463,7 @@ class Owner(commands.Cog):
             except discord.HTTPException:
                 embed = discord.Embed(
                     title="Error!",
-                    description=f"<:olympus_notify:1227866804630720565> An error occurred while banning **{member.name}**.",
+                    description=f"😤 An error occurred while banning **{member.name}**.",
                     color=0x000000
                 )
                 await ctx.reply(embed=embed, mention_author=False, delete_after=5)
@@ -481,21 +481,21 @@ class Owner(commands.Cog):
                 await ctx.guild.unban(user, reason=reason)
                 embed = discord.Embed(
                     title="Successfully Unbanned",
-                    description=f"<:olympus_tick:1227866641027698792> | **{user.name}** has been successfully unbanned from {ctx.guild.name} by the Bot Owner.",
+                    description=f"🐍 | **{user.name}** has been successfully unbanned from {ctx.guild.name} by the Bot Owner.",
                     color=0x000000
                 )
                 await ctx.reply(embed=embed, mention_author=False)
             except discord.Forbidden:
                 embed = discord.Embed(
                     title="Error!",
-                    description=f"<:olympus_notify:1227866804630720565> I do not have permission to unban **{user.name}** in this guild.",
+                    description=f"😄 I do not have permission to unban **{user.name}** in this guild.",
                     color=0x000000
                 )
                 await ctx.reply(embed=embed, mention_author=False)
             except discord.HTTPException:
                 embed = discord.Embed(
                     title="Error!",
-                    description=f"<:olympus_notify:1227866804630720565> An error occurred while unbanning **{user.name}**.",
+                    description=f"😤 An error occurred while unbanning **{user.name}**.",
                     color=0x000000
                 )
                 await ctx.reply(embed=embed, mention_author=False)
@@ -772,7 +772,7 @@ class Owner(commands.Cog):
     async def _owner_help(self, ctx):
         
         embed = Embed(title="Owner Commands",
-                      description="`staffadd` ,   `staffremove` ,   `stafflist` , `slist` ,   `getinvite <guild-id>` ,   `getguild <channel-id>` ,   `mutual <user>` ,   `guildban <guild_id> <user_id>` ,   `guildunban <guild_id> <user_id>` ,   `olympus.restart` ,   `servertour` ,   `forcepurgebots` , `forcepurgeuser` ,   `ownerban` , `bdg add <user> <badge>` ,   `bdg remove <user> <badge>` ,   `global <subcommand>` ,   `np <subcommand>` ,   `autonp <subcommand>`",
+                      description="`staffadd` ,   `staffremove` ,   `stafflist` , `slist` ,   `getinvite <guild-id>` ,   `getguild <channel-id>` ,   `mutual <user>` ,   `guildban <guild_id> <user_id>` ,   `guildunban <guild_id> <user_id>` ,   `kyra.restart` ,   `servertour` ,   `forcepurgebots` , `forcepurgeuser` ,   `ownerban` , `bdg add <user> <badge>` ,   `bdg remove <user> <badge>` ,   `global <subcommand>` ,   `np <subcommand>` ,   `autonp <subcommand>`",
                       color=0x000000)
         await ctx.send(embed=embed)
 
@@ -874,23 +874,23 @@ class Badges(commands.Cog):
             user_badges = []
 
             badge_mapping = {
-              "staff": "<:Staff:1219285127444566056> Discord Employee",
-              "partner": "<:Partnered:1219285024688443443> Partnered Server Owner",
-              "discord_certified_moderator": "<:ModeratorProgamsAlumini:1274717806067187814> Moderator Programs Alumni",
-              "hypesquad_balance": "<:Balance:1219282289020637344> House Balance Member",
-              "hypesquad_bravery": "<:Bravery:1219282462975201352> House Bravery Member",
-              "hypesquad_brilliance": "<:Brilliance:1219284165317361685> House Brilliance Member",
-              "hypesquad": "<:HypeEvent:1219284814214205531> HypeSquad Events Member",
-              "early_supporter": "<:Early:1219284700292579328> Early Supporter",
-              "bug_hunter": "<:Bugter:1219284193440436224> Bug Hunter Level 1",
-              "bug_hunter_level_2": "<:GoldenBugHunter:1274718350689304630> Bug Hunter Level 2",
-              "verified_bot": "<:VERIFIED_BOT:1274718475583098982> Verified Bot",
-              "verified_bot_developer": "<:VerifiedBotDev:1219285243849080884> Verified Bot Developer",
-              "active_developer": "<:Activedev:1219280536959189144> Active Developer",
-              "early_verified_bot_developer": "<:VerifiedBotDev:1219285243849080884> Early Verified Bot Developer",
-              "system": "<:system_user:1274718577185787954> System User",
+              "staff": "🧑‍💻 Discord Employee",
+              "partner": "⛓️ Partnered Server Owner",
+              "discord_certified_moderator": "🧑‍🍳 Moderator Programs Alumni",
+              "hypesquad_balance": " House Balance Member",
+              "hypesquad_bravery": " House Bravery Member",
+              "hypesquad_brilliance": " House Brilliance Member",
+              "hypesquad": " HypeSquad Events Member",
+              "early_supporter": "🤩 Early Supporter",
+              "bug_hunter": "👹 Bug Hunter Level 1",
+              "bug_hunter_level_2": "👹 Bug Hunter Level 2",
+              "verified_bot": "✅ Verified Bot",
+              "verified_bot_developer": "🧑‍💻 Verified Bot Developer",
+              "active_developer": "🧑‍💻 Active Developer",
+              "early_verified_bot_developer": "✅ Early Verified Bot Developer",
+              "system": "📣 System User",
               "team_user": "👷 User is a [Team](https://discord.com/developers/docs/topics/teams)",
-              "spammer": "<:BarDiscord:1274718831352217620> Marked as Spammer",
+              "spammer": "😤 Marked as Spammer",
               "bot_http_interactions": "<:HTTP_INTERACTION_BOT:1274719023401013279> Bot uses only [HTTP interactions](https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction) and is shown in the online member list."
             }
 
@@ -904,11 +904,11 @@ class Badges(commands.Cog):
             omg = bool(user.banner)
             if not member.bot:
                 if omg or wtf:
-                    user_badges.append("<:BadgeNitro:1274895915689443431> Nitro Subscriber")
+                    user_badges.append("🔮 Nitro Subscriber")
                 for guild in self.bot.guilds:
                     if member in guild.members:
                         if guild.premium_subscription_count > 0 and member in guild.premium_subscribers:
-                            user_badges.append("<:booster:1274896054810312816> Server Booster Badge")
+                            user_badges.append("m🔮 Server Booster Badge")
                             
             if user_badges:
               embed.add_field(name="__**User Badges**__", value="\n".join(user_badges), inline=False)
@@ -941,23 +941,23 @@ class Badges(commands.Cog):
             user_badges = []
 
             badge_mapping = {
-              "staff": "<:Staff:1219285127444566056> Discord Employee",
-              "partner": "<:Partnered:1219285024688443443> Partnered Server Owner",
-              "discord_certified_moderator": "<:ModeratorProgamsAlumini:1274717806067187814> Moderator Programs Alumni",
-              "hypesquad_balance": "<:Balance:1219282289020637344> House Balance Member",
-              "hypesquad_bravery": "<:Bravery:1219282462975201352> House Bravery Member",
-              "hypesquad_brilliance": "<:Brilliance:1219284165317361685> House Brilliance Member",
-              "hypesquad": "<:HypeEvent:1219284814214205531> HypeSquad Events Member",
-              "early_supporter": "<:Early:1219284700292579328> Early Supporter",
-              "bug_hunter": "<:Bugter:1219284193440436224> Bug Hunter Level 1",
-              "bug_hunter_level_2": "<:GoldenBugHunter:1274718350689304630> Bug Hunter Level 2",
-              "verified_bot": "<:VERIFIED_BOT:1274718475583098982> Verified Bot",
-              "verified_bot_developer": "<:VerifiedBotDev:1219285243849080884> Verified Bot Developer",
-              "active_developer": "<:Activedev:1219280536959189144> Active Developer",
-              "early_verified_bot_developer": "<:VerifiedBotDev:1219285243849080884> Early Verified Bot Developer",
-              "system": "<:system_user:1274718577185787954> System User",
+              "staff": "🧑‍💻 Discord Employee",
+              "partner": "⛓️ Partnered Server Owner",
+              "discord_certified_moderator": "🧑‍🍳 Moderator Programs Alumni",
+              "hypesquad_balance": " House Balance Member",
+              "hypesquad_bravery": " House Bravery Member",
+              "hypesquad_brilliance": " House Brilliance Member",
+              "hypesquad": " HypeSquad Events Member",
+              "early_supporter": "🤩 Early Supporter",
+              "bug_hunter": "👹 Bug Hunter Level 1",
+              "bug_hunter_level_2": "👹 Bug Hunter Level 2",
+              "verified_bot": "✅ Verified Bot",
+              "verified_bot_developer": "🧑‍💻 Verified Bot Developer",
+              "active_developer": "🧑‍💻 Active Developer",
+              "early_verified_bot_developer": "🐍 Early Verified Bot Developer",
+              "system": "🎿 System User",
               "team_user": "👷 User is a [Team](https://discord.com/developers/docs/topics/teams)",
-              "spammer": "<:BarDiscord:1274718831352217620> Marked as Spammer",
+              "spammer": "😤 Marked as Spammer",
               "bot_http_interactions": "<:HTTP_INTERACTION_BOT:1274719023401013279> Bot uses only [HTTP interactions](https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction) and is shown in the online member list."
             }
 
