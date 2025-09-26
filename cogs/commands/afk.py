@@ -28,13 +28,13 @@ class OnOrOff(BasicView):
         super().__init__(ctx, timeout=None)
         self.value = None
 
-    @discord.ui.button(label="DM me", emoji="<:olympus_tick:1227866641027698792>", custom_id='Yes', style=discord.ButtonStyle.green)
+    @discord.ui.button(label="DM me", emoji="🛩️", custom_id='Yes', style=discord.ButtonStyle.green)
     async def dare(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.value = 'Yes'
         await interaction.response.defer()
         self.stop()
 
-    @discord.ui.button(label="Don't DM", emoji="<:olympus_cross:1227866668152393789>", custom_id='No', style=discord.ButtonStyle.danger)
+    @discord.ui.button(label="Don't DM", emoji="📦", custom_id='No', style=discord.ButtonStyle.danger)
     async def truth(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.value = 'No'
         await interaction.response.defer()
@@ -168,7 +168,7 @@ class afk(commands.Cog):
             reason = "I am afk :)"
 
         if any(invite in reason.lower() for invite in ['discord.gg', 'gg/']):
-            emd = discord.Embed(description="<:olympus_notify:1227866804630720565> | You can't advertise Serve Invite in the AFK reason", color=0x0c0606)
+            emd = discord.Embed(description="📣 | You can't advertise Serve Invite in the AFK reason", color=0x0c0606)
             return await ctx.send(embed=emd)
 
         view = OnOrOff(ctx)
@@ -192,14 +192,7 @@ class afk(commands.Cog):
             await db.commit()
 
             await test.delete()
-            af = discord.Embed(title='<:olympus_tick:1227866641027698792> Success', 
+            af = discord.Embed(title='✅ Success', 
                  description=f'{ctx.author.mention}, You are now marked as AFK due to: **{reason}**', 
                  color=0x000000)
             await ctx.reply(embed=af)
-
-"""
-@Author: Sonu Jana
-    + Discord: me.sonu
-    + Community: https://discord.gg/odx (Olympus Development)
-    + for any queries reach out Community or DM me.
-"""
