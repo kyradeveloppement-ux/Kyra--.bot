@@ -12,7 +12,7 @@ from utils.Tools import *
 class Ship(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.special_users = [213347081799073793, 1144179659735572640, 677952614390038559, 839060566759702548]
+        self.special_users = [1341478551764860958]
 
     @commands.hybrid_command(pass_context=True, help="Ship two users together.")
     @blacklist_check()
@@ -118,10 +118,3 @@ def setup(bot):
 
 
 
-
-"""
-@Author: Sonu Jana
-    + Discord: me.sonu
-    + Community: https://discord.gg/odx (Olympus Development)
-    + for any queries reach out support or DM me.
-"""
