@@ -44,14 +44,14 @@ class MapView(ui.View):
         if self.latitude is None or self.longitude is None:
             await interaction.response.send_message("Failed to retrieve map data. Please try again.", ephemeral=True)
             return
-        embed = discord.Embed(title=f"<:mapa:1257656719639707689> Map of {self.location}", color=0x000000)
+        embed = discord.Embed(title=f"🏞️ Map of {self.location}", color=0x000000)
         embed.add_field(name="🌐  Open in Webpage", value=f"➜  **[Click Here](https://www.openstreetmap.org/?mlat={self.latitude}&mlon={self.longitude}&zoom={self.zoom_level})**")
         embed.add_field(name="🔍  Current Zoom Level", value=f"➜  {str(self.zoom_level)}")
         embed.add_field(name="🗺️  Map Style", value=f"➜  {self.map_style}")
         embed.add_field(name="📏  Map Size", value=f"➜  {self.map_size}")
         embed.add_field(name="📍 Current Coordinates", value=f"➜  {self.latitude}, {self.longitude}")
         embed.set_image(url=self.map_url)
-        embed.set_footer(text="Made by Olympus Development™")
+        embed.set_footer(text="Made by Kyra Development™")
         try:
             await interaction.message.edit(embed=embed, view=self)
         except Exception as e:
@@ -228,13 +228,3 @@ class Map(commands.Cog):
         embed.set_image(url=view.map_url)
         embed.set_footer(text=f"Requested By {ctx.author}", icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
         await ctx.send(embed=embed, view=view)
-
-
-
-
-    """
-    @Author: Sonu Jana
-        + Discord: me.sonu
-        + Community: https://discord.gg/odx (Olympus Development)
-        + for any queries reach out Community or DM me.
-    """
