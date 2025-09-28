@@ -109,5 +109,4 @@ class NotifCommands(commands.Cog):
                                 )
                                 embed.add_field(name="Stream Title", value=streaming.name, inline=False)
                                 embed.add_field(name="Watch here", value=streaming.url, inline=False)
-                                await channel.send(content=role.mention, embed=embed
-                                
+                                await channel.send(content=role.mention, embed=embed)
