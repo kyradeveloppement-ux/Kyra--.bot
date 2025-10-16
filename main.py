@@ -1,6 +1,4 @@
 import os
-
-os.system("pip install -r requirements.txt")
 import asyncio
 import traceback
 from threading import Thread
@@ -125,25 +123,6 @@ async def on_command_completion(context: commands.Context) -> None:
             except Exception as e:
                 print(f'Command failed: {e}')
                 traceback.print_exc()
-
-
-from flask import Flask
-from threading import Thread
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return f"© Kyra Development 2025"
-
-def run():
-     app.run(host='0.0.0.0', port=3000)
-
-def keep_alive():
-    server = Thread(target=run)
-    server.start()
-
-keep_alive()
 
 async def main():
     async with client:
