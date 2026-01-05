@@ -1,129 +1,174 @@
+"""
+Kyra Bot - Core Bot Class
+Modern implementation of the Discord bot with optimized prefix handling.
+"""
 from __future__ import annotations
 from discord.ext import commands
 import discord
 import aiohttp
-import json
-import jishaku
-import asyncio
 import typing
-from typing import List
+from typing import List, Optional
 import aiosqlite
-from utils.config import OWNER_IDS
-from utils import getConfig, updateConfig
-from .Context import Context
-from discord.ext import commands, tasks
 from colorama import Fore, Style, init
-import importlib
-import inspect
+
+from utils.config import OWNER_IDS, DEFAULT_PREFIX
+from utils import getConfig
+from utils.database import DatabaseManager
+from .Context import Context
 
 init(autoreset=True)
 
-extensions: List[str] = [
-    "cogs"
-]
+# Extensions to load on startup
+extensions: List[str] = ["cogs"]
+
 
 class Olympus(commands.AutoShardedBot):
+    """
+    Main bot class - extends AutoShardedBot for scalability.
+    Handles prefix management, command processing, and event handling.
+    """
 
-    def __init__(self, *arg, **kwargs):
+    def __init__(self, *args, **kwargs):
+        # Configure intents - full permissions for all events
         intents = discord.Intents.all()
         intents.presences = True
         intents.members = True
-        super().__init__(command_prefix=self.get_prefix,
-                         case_insensitive=True,
-                         intents=intents,
-                         status=discord.Status.do_not_disturb,
-                         strip_after_prefix=True,
-                         owner_ids=OWNER_IDS,
-                         allowed_mentions=discord.AllowedMentions(
-                             everyone=False, replied_user=False, roles=False),
-                         sync_commands_debug=True,
-                         sync_commands=True,
-                         shard_count=2)
+        
+        super().__init__(
+            command_prefix=self.get_prefix,
+            case_insensitive=True,
+            intents=intents,
+            status=discord.Status.do_not_disturb,
+            strip_after_prefix=True,
+            owner_ids=OWNER_IDS,
+            allowed_mentions=discord.AllowedMentions(
+                everyone=False,
+                replied_user=False,
+                roles=False
+            ),
+            shard_count=2
+        )
 
     async def setup_hook(self):
-        await self.load_extensions() 
+        """Called when the bot is setting up - loads all extensions"""
+        await self.load_extensions()
 
     async def load_extensions(self):
+        """Load all bot extensions (cogs)"""
+        print(Fore.CYAN + Style.BRIGHT + "\n🔧 Loading Extensions...")
+        
         for extension in extensions:
             try:
-                await self.load_extension(extension) 
-                print(Fore.GREEN + Style.BRIGHT + f"Loaded extension: {extension}")
+                await self.load_extension(extension)
+                print(Fore.GREEN + Style.BRIGHT + f"  ✅ Loaded: {extension}")
             except Exception as e:
-                print(
-                    f"{Fore.RED}{Style.BRIGHT}Failed to load extension {extension}. {e}"
-                )
-        print(Fore.GREEN + Style.BRIGHT + "*" * 20)
+                print(Fore.RED + Style.BRIGHT + f"  ❌ Failed to load {extension}: {e}")
+        
+        print(Fore.CYAN + Style.BRIGHT + "━" * 50 + "\n")
 
-    
     async def on_connect(self):
-        await self.change_presence(status=discord.Status.do_not_disturb,
-                                   activity=discord.Activity(
-                                       type=discord.ActivityType.playing,
-                                       name='Avec KTX✨ Family'))
+        """Called when bot connects to Discord"""
+        await self.change_presence(
+            status=discord.Status.do_not_disturb,
+            activity=discord.Activity(
+                type=discord.ActivityType.playing,
+                name='Avec KTX✨ Family'
+            )
+        )
 
-    async def send_raw(self, channel_id: int, content: str,
-                       **kwargs) -> typing.Optional[discord.Message]:
-        await self.http.send_message(channel_id, content, **kwargs)
+    async def get_prefix(self, message: discord.Message):
+        """
+        Dynamic prefix handler.
+        - Supports guild-specific prefixes
+        - Supports no-prefix users
+        - Always allows mention as prefix
+        """
+        if message.guild:
+            # In guild - check for no-prefix users
+            is_np = await DatabaseManager.is_np_user(message.author.id)
+            
+            # Get guild's custom prefix
+            data = await getConfig(message.guild.id)
+            prefix = data.get("prefix", DEFAULT_PREFIX)
+            
+            if is_np:
+                # No-prefix user - allow both prefix and no prefix
+                return commands.when_mentioned_or(prefix, '')(self, message)
+            else:
+                # Regular user - require prefix or mention
+                return commands.when_mentioned_or(prefix)(self, message)
+        else:
+            # In DMs - check for no-prefix users
+            is_np = await DatabaseManager.is_np_user(message.author.id)
+            
+            if is_np:
+                # No-prefix user in DMs
+                return commands.when_mentioned_or('$', '')(self, message)
+            else:
+                # Regular user in DMs - only mention
+                return commands.when_mentioned_or('')(self, message)
+
+    async def on_message_edit(self, before: discord.Message, after: discord.Message):
+        """
+        Handle edited messages - re-process commands if content changed.
+        This allows users to edit their messages and have commands re-executed.
+        """
+        # Skip if content didn't change
+        if before.content == after.content:
+            return
+        
+        # Skip DMs and bot messages
+        if after.guild is None or after.author.bot:
+            return
+        
+        # Get context and check if it's a command
+        ctx: Context = await self.get_context(after, cls=Context)
+        if ctx.command is None:
+            return
+        
+        # Skip if in thread (avoid issues)
+        if isinstance(ctx.channel, discord.Thread):
+            return
+        
+        # Re-invoke the command
+        await self.invoke(ctx)
+
+    async def send_raw(
+        self,
+        channel_id: int,
+        content: str,
+        **kwargs
+    ) -> Optional[discord.Message]:
+        """Send a raw message using the HTTP API"""
+        return await self.http.send_message(channel_id, content, **kwargs)
 
     async def invoke_help_command(self, ctx: Context) -> None:
-        """Invoke the help command or default help command if help extensions is not loaded."""
+        """Invoke the help command for a given context"""
         return await ctx.send_help(ctx.command)
 
     async def fetch_message_by_channel(
-            self, channel: discord.TextChannel,
-            messageID: int) -> typing.Optional[discord.Message]:
+        self,
+        channel: discord.TextChannel,
+        message_id: int
+    ) -> Optional[discord.Message]:
+        """
+        Fetch a specific message from a channel by ID.
+        More efficient than searching through entire history.
+        """
         async for msg in channel.history(
-                limit=1,
-                before=discord.Object(messageID + 1),
-                after=discord.Object(messageID - 1),
+            limit=1,
+            before=discord.Object(message_id + 1),
+            after=discord.Object(message_id - 1),
         ):
             return msg
-
-    async def get_prefix(self, message: discord.Message):
-        if message.guild:
-            guild_id = message.guild.id
-            async with aiosqlite.connect('db/np.db') as db:
-                async with db.execute("SELECT id FROM np WHERE id = ?", (message.author.id,)) as cursor:
-                    row = await cursor.fetchone()
-                    if row:
-                        data = await getConfig(guild_id)
-                        prefix = data["prefix"]
-                        # Np user
-                        return commands.when_mentioned_or(prefix, '')(self, message)
-                    else:
-                        # non np
-                        data = await getConfig(guild_id)
-                        prefix = data["prefix"]
-                        return commands.when_mentioned_or(prefix)(self, message)
-        else:
-            async with aiosqlite.connect('db/np.db') as db:
-                async with db.execute("SELECT id FROM np WHERE id = ?", (message.author.id,)) as cursor:
-                    row = await cursor.fetchone()
-                    if row:
-                        #NO user (Dms)
-                        return commands.when_mentioned_or('$', '')(self, message)
-                    else:
-                        #Non Np user (DMs)
-                        return commands.when_mentioned_or('')(self, message)
+        return None
 
 
-    async def on_message_edit(self, before, after):
-        ctx: Context = await self.get_context(after, cls=Context)
-        if before.content != after.content:
-            if after.guild is None or after.author.bot:
-                return
-            if ctx.command is None:
-                return
-            if type(ctx.channel) == "public_thread":
-                return
-            await self.invoke(ctx)
-        else:
-            return
-
-
-
-
-def setup_bot():
+def setup_bot() -> Olympus:
+    """
+    Factory function to create a bot instance.
+    Can be used for testing or alternative initialization.
+    """
     intents = discord.Intents.all()
     bot = Olympus(intents=intents)
     return bot
